@@ -1,7 +1,16 @@
 import express, { type Request, type Response, type NextFunction, type Express } from 'express';
+import * as sqlite from "sqlite3";
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+
 const app: Express = express();
+const db = new sqlite.Database("sqlite.db");
 
 app.use(express.json());
+app.use(passport.initialize())
+passport.use("local", new LocalStrategy((username, password, done) => {
+
+}));
 
 const port = process.env.PORT || 8080;
 
