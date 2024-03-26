@@ -5,33 +5,33 @@ import bcrypt from 'bcrypt';
 import { getUserByUsername, getUserById } from './db';
 import { log } from './logger';
 
-passport.serializeUser((id, done) => {
-    done(null, id);
+passport.serializeUser((user, done) => {
+    done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
     const user = await getUserById(id);
     if (user == null) {
-      log.error(`error deserializing user: ${id}: user not found`);
+        log.error(`error deserializing user: ${id}: user not found`);
     }
     done(null, user);
 });
 
 export default function (passport: any) {
-  passport.use("local", new LocalStrategy({ usernameField: 'username', }, async (username, password, done) => {
-      const userData = await getUserByUsername(username);
+    passport.use("local", new LocalStrategy({  }, async (username, password, done) => {
+      const user = await getUserByUsername(username);
 
       // user does not exist
-      if (userData == null) {
+      if (user == null) {
           return done(null, false);
       }
 
-      const match = await bcrypt.compare(password, userData.password);
+      const match = await bcrypt.compare(password, user.password);
 
       if (!match) {
           return done(null, false);
       }
 
-      return done(null, userData.id);
-  }));
+      return done(null, user);
+    }));
 };
