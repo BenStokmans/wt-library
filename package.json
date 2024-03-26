@@ -21,6 +21,7 @@
     "express": "^4.18.3",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "tslog": "^4.9.2"
   }
 }
