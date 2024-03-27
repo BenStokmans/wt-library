@@ -19,8 +19,8 @@
         <label for="password">Password</label>
         <input id="password" name="password" type="password" autocomplete="password" required/>
       </p>
-      <% if (error) { %>
-        <p><%= error %></p>
+      <% if (message) { %>
+        <p><%= message %></p>
       <% } %>
       <p>
         <button type="submit">Log in</button>

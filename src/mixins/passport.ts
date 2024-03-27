@@ -1,7 +1,6 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcrypt';
-
 import { getUserByUsername, getUserById } from './db';
 import { log } from './logger';
 
@@ -23,13 +22,13 @@ export default function (passport: any) {
 
       // user does not exist
       if (user == null) {
-          return done(null, false);
+          return done(null, false, { message: "user does not exist" });
       }
 
       const match = await bcrypt.compare(password, user.password);
 
       if (!match) {
-          return done(null, false);
+          return done(null, false, { message: "incorrect password" });
       }
 
       return done(null, user);

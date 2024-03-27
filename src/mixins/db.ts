@@ -8,7 +8,7 @@ export function getUserByUsername(username: string): Promise<User | null> {
 
     return new Promise<User | null>(resolve => {
         db.get(sql, username, (err, row) => {
-            if (err) {
+            if (err || !row) {
                 resolve(null);
                 return;
             }

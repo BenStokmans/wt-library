@@ -5,6 +5,8 @@ import applyStrategy from "./mixins/passport"
 import ejs from "ejs";
 import bcrypt from "bcrypt";
 import session from "express-session";
+import cookieParser from "cookie-parser";
+import flash from "connect-flash";
 
 const app: Express = express();
 
@@ -12,10 +14,16 @@ app.use(session({
     secret: "demannenvancerberus",
     resave: false,
     saveUninitialized: true,
+    // cookie: {
+    //     maxAge: 3600000,
+    // },
 }))
+app.use(cookieParser("demannenvancerberus"));
 app.use(express.urlencoded());
 app.use(express.json());
-app.use(passport.initialize())
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
 // apply our strategy
 applyStrategy(passport);
@@ -40,13 +48,13 @@ app.get(
           res.redirect("/");
           return;
         }
-        res.send(await ejs.renderFile("src/views/login.ejs", { error: null }));
+        res.send(await ejs.renderFile("src/views/login.ejs", { message: req.flash("error") }));
     },
 );
 
 app.post(
     "/login",
-    passport.authenticate("local", { successRedirect: "/" }),
+    passport.authenticate("local", { successRedirect: "/", failureRedirect: "/login", failureFlash: true }),
 );
 
 // app.get(
