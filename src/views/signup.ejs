@@ -21,10 +21,10 @@
       </p>
       <p>
         <label for="password-repeat">Repeat password</label>
-        <input id="password-repeat" name="password-repeat" type="password" required/>
+        <input id="password-repeat" name="password_repeat" type="password" required/>
       </p>
-      <% if (error) { %>
-        <p><%= error %></p>
+      <% if (message) { %>
+        <p><%= message %></p>
       <% } %>
       <p>
         <button type="submit">Sign up</button>

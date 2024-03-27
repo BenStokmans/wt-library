@@ -30,3 +30,17 @@ export function getUserById(id: number):  Promise<User | null> {
         });
     });
 }
+
+export function createUser(user: User): Promise<Boolean> {
+    const sql = `INSERT INTO users VALUES (?, ?, ?)`;
+
+    return new Promise<Boolean>(resolve => {
+        db.run(sql, [user.id !== 0 ? user.id : null, user.username, user.password], err => {
+            if (err) {
+                resolve(false);
+                return;
+            }
+            resolve(true);
+        });
+    });
+}
