@@ -1,11 +1,11 @@
 CREATE TABLE users (
-    user_id CHAR(36),
+    user_id CHAR(36) PRIMARY KEY,
     username VARCHAR(32) NOT NULL UNIQUE,
     passwd_hash VARCHAR(60) NOT NULL
 );
 
 CREATE TABLE authors (
-    author_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author_id CHAR(36) PRIMARY KEY,
     first_name VARCHAR(128) NOT NULL,
     last_name VARCHAR(128) NOT NULL,
     wikipedia_url VARCHAR(512)
@@ -13,7 +13,7 @@ CREATE TABLE authors (
 
 CREATE TABLE books (
     isbn INTEGER PRIMARY KEY,
-    author_id INTEGER NOT NULL,
+    author_id CHAR(36) NOT NULL,
     title VARCHAR(128) NOT NULL,
     cover_image_url VARCHAR(512),
     description VARCHAR(4096),
@@ -21,7 +21,7 @@ CREATE TABLE books (
 );
 
 CREATE TABLE reviews (
-    user_id INTEGER NOT NULL,
+    user_id CHAR(36) NOT NULL,
     isbn INTEGER NOT NULL,
     title VARCHAR(64) NOT NULL,
     body VARCHAR(16384),
@@ -31,9 +31,9 @@ CREATE TABLE reviews (
 );
 
 CREATE TABLE reservations (
-    res_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    res_id CHAR(36) PRIMARY KEY,
     isbn INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
+    user_id CHAR(36) NOT NULL,
     start_time INTEGER DEFAULT (CAST(strftime('%s', 'now') AS INT) * 1000000000),
     duration INTEGER NOT NULL,
     returned BOOLEAN DEFAULT FALSE,

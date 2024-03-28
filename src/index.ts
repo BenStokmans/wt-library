@@ -1,5 +1,4 @@
 import express, { type Request, type Response, type NextFunction, type Express } from 'express';
-import { getUserByUsername, createUser } from "./mixins/db";
 import passport from "passport";
 import applyStrategy from "./mixins/passport"
 import ejs from "ejs";
@@ -8,7 +7,7 @@ import log from "./mixins/logger"
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import flash from "connect-flash";
-import { User } from "./models/user";
+import { User, createUser, getUserByUsername } from "./models/user";
 
 const app: Express = express();
 
