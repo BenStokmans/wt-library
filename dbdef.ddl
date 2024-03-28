@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id CHAR(36),
     username VARCHAR(32) NOT NULL UNIQUE,
     passwd_hash VARCHAR(60) NOT NULL
 );
