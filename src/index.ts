@@ -69,6 +69,14 @@ app.get(
     },
 );
 
+app.get(
+    "/logout",
+    async (req: Request, res: Response): Promise<void> => {
+        req.logout(() => {});
+        res.redirect("/");
+    },
+)
+
 app.post(
     "/signup",
     async (req: Request, res: Response): Promise<void> => {
