@@ -1,3 +1,3 @@
-import { Logger, type ILogObj } from "tslog";
+import { Logger } from "tslog";
 
-export const log: Logger<ILogObj> = new Logger();
+export default new Logger();
