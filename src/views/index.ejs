@@ -8,8 +8,16 @@
     <title>WTLibrary - Home</title>
 </head>
 <body>
-    <% for (var book of books) { %>
-        <%  %>
-    <% } %>
+    <header></header>
+    <section class="catalog">
+        <% for (var entry of page) { %>
+            <article>
+                <img src="<%= entry[0].coverImageUrl%>" alt="Cover image of <%= entry[0].title %>">
+                <h4><%= entry[0].title %></h4>
+                <p>by <%= entry[1] %></p>
+            </article>
+        <% } %>
+    </section>
+    <footer></footer>
 </body>
 </html>

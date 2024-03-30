@@ -7,6 +7,8 @@ import flash from "connect-flash";
 import registerAuth from "./auth";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
+import { Book } from "./models/book.ts";
+import ejs from "ejs";
 
 const db = await open({
   filename: "sqlite.db",
@@ -40,6 +42,7 @@ app.get(
       return;
     }
     res.send("Guest page");
+    await ejs.renderFile("views/index.ejs", { page: await Book.getPageWithAuthorNames(0, db) });
   },
 );
 

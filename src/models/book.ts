@@ -1,18 +1,17 @@
-import { Author } from "./author";
 import type { Database } from "sqlite";
 
 export class Book {
   public isbn: number;
-  public author: Author;
+  public authorId: number;
   public title: string;
-  public cover_image_url: string;
+  public coverImageUrl: string;
   public description: string;
 
-  constructor(isbn: number, author: Author, title: string, cover_image_url: string, description: string) {
+  constructor(isbn: number, authorId: number, title: string, coverImageUrl: string, description: string) {
     this.isbn = isbn;
-    this.author = author;
+    this.authorId = authorId;
     this.title = title;
-    this.cover_image_url = cover_image_url;
+    this.coverImageUrl = coverImageUrl;
     this.description = description;
   }
 
@@ -21,18 +20,26 @@ export class Book {
     if (!book) {
       return null;
     }
-    const author = await Author.getById(book.author_id, db);
-    if (!author) {
-      return null;
-    }
 
-    return new Book(book.isbn, author, book.title, book.cover_image_url, book.description);
+    return new Book(book.isbn, book.author_id, book.title, book.cover_image_url, book.description);
+  }
+
+  static async getPageWithAuthorNames(index: number, db: Database): Promise<[Book, string][]> {
+    const books: [Book, string][] = [];
+    const query: string = "SELECT books.*, authors.first_name, authors.last_name FROM books LEFT JOIN authors ON books.author_id = authors.author_id ORDER BY isbn LIMIT 10 OFFSET ?";
+
+    await db.each(query, index * 10, (err, row) => {
+      if (err) { return; }
+      books.push([new Book(row.isbn, row.author_id, row.title, row.cover_image_url, row.description), row.first_name + row.last_name]);
+    });
+
+    return books;
   }
 
   static async create(book: Book, db: Database): Promise<boolean> {
     const result = await db.run(
       "INSERT INTO books VALUES (?, ?, ?, ?, ?)",
-      book.isbn, book.author.id, book.title, book.cover_image_url, book.description,
+      book.isbn, book.authorId, book.title, book.coverImageUrl, book.description,
     );
 
     return result.lastID != null;
