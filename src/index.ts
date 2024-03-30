@@ -15,6 +15,8 @@ const db = await open({
   driver: sqlite3.Database,
 });
 
+// const db = new sqlite3.Database("sqlite.db");
+
 const app: Express = express();
 
 app.use(session({
@@ -37,12 +39,11 @@ const port = process.env.PORT || 8080;
 app.get(
   "/",
   async (req: Request, res: Response): Promise<void> => {
-    if (req.user) {
-      res.send("Welcome " + req.user.firstName);
-      return;
-    }
-    res.send("Guest page");
-    await ejs.renderFile("views/index.ejs", { page: await Book.getPageWithAuthorNames(0, db) });
+    res.send(await ejs.renderFile("src/views/index.ejs", {
+      books: await Book.getPageWithAuthorNames(0, db),
+      user: req.user,
+      isAuthenticated: Boolean(req.user),
+    }));
   },
 );
 

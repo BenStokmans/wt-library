@@ -29,9 +29,13 @@ module.exports = {
         "@typescript-eslint"
     ],
     "rules": {
+        "comma-dangle": [
+            "error",
+            "always-multiline"
+        ],
         "indent": [
             "error",
-            4
+            2
         ],
         "linebreak-style": [
             "error",
@@ -44,6 +48,9 @@ module.exports = {
         "semi": [
             "error",
             "always"
+        ],
+        "@typescript-eslint/no-explicit-any": [
+            "off"
         ]
     }
 }

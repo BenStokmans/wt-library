@@ -14,6 +14,7 @@ CREATE TABLE authors (
     author_id INTEGER PRIMARY KEY AUTOINCREMENT,
     first_name VARCHAR(128) NOT NULL,
     last_name VARCHAR(128) NOT NULL,
+    alias VARCHAR(128),
     wikipedia_url VARCHAR(512)
 );
 

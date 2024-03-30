@@ -10,11 +10,11 @@
 <body>
     <header></header>
     <section class="catalog">
-        <% for (var entry of page) { %>
+        <% for (var book of books) { %>
             <article>
-                <img src="<%= entry[0].coverImageUrl%>" alt="Cover image of <%= entry[0].title %>">
-                <h4><%= entry[0].title %></h4>
-                <p>by <%= entry[1] %></p>
+                <img src="<%= book.coverImageUrl%>" alt="Cover image of <%= book.title %>">
+                <h4><%= book.title %></h4>
+                <p>by <%= book.author.alias ? book.author.alias : book.author.first_name + " " + book.author.last_name %></p>
             </article>
         <% } %>
     </section>
