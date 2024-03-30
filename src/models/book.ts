@@ -26,15 +26,12 @@ export class Book {
   }
 
   static async getPageWithAuthorNames(index: number, db: Database): Promise<Book[]> {
-    const books: Book[] = [];
     const query: string = "SELECT books.*, authors.first_name, authors.last_name, authors.alias FROM books LEFT JOIN authors ON books.author_id = authors.author_id ORDER BY isbn LIMIT 10 OFFSET ?";
 
-    await db.each(query, index * 10, (err, book) => {
-      if (err) { return; }
-      books.push(new Book(book.isbn, new Author(book.first_name, book.last_name, book.alias, null, book.author_id), book.title, book.cover_image_url, book.description));
+    const rawBooks = await db.all(query, index * 10);
+    return rawBooks.map(book => {
+      return new Book(book.isbn, new Author(book.first_name, book.last_name, book.alias, null, book.author_id), book.title, book.cover_image_url, book.description);
     });
-
-    return books;
   }
 
   async create(db: Database): Promise<boolean> {
