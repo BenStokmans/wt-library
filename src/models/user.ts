@@ -1,42 +1,70 @@
 import { v4 as uuidv4 } from "uuid";
-import db from "../mixins/db";
+import { type Database } from "sqlite";
+
+export interface UserOpts {
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  streetAndNumber: string;
+  zipCode: string;
+  city: string;
+  passwordHash: string;
+}
 
 export class User {
   public id: string;
   public username: string;
-  public password: string;
+  public email: string;
+  public firstName: string;
+  public lastName: string;
+  public streetAndNumber: string;
+  public zipCode: string;
+  public city: string;
+  public passwordHash: string;
 
-  constructor(username: string, password: string, id?: string) {
+  constructor(opts: UserOpts, id?: string) {
     this.id = id ?? uuidv4();
-    this.username = username;
-    this.password = password;
+    this.username = opts.username;
+    this.email = opts.email;
+    this.firstName = opts.firstName;
+    this.lastName = opts.lastName;
+    this.streetAndNumber = opts.streetAndNumber;
+    this.zipCode = opts.zipCode;
+    this.city = opts.city;
+    this.passwordHash = opts.passwordHash;
   }
-}
 
-export async function getUserByUsername(username: string): Promise<User | null> {
-    const user = await db.get("SELECT * FROM users WHERE username = ?", username);
-    if (!user) {
-      return null;
-    }
-
-    return new User(user.username, user.passwd_hash, user.user_id);
-}
-
-export async function getUserById(id: string): Promise<User | null> {
-    const sql = "SELECT * FROM users WHERE user_id = ?";
-
-    const user = await db.get(sql, id);
-    if (!user) {
-      return null;
-    }
-    return new User(user.username, user.passwd_hash, user.user_id);
-}
-
-export async function createUser(user: User): Promise<Boolean> {
+  static async create(user: User, db: Database): Promise<boolean> {
     const result = await db.run(
       "INSERT INTO users VALUES (?, ?, ?)",
-      user.id, user.username, user.password
+      user.id, user.username, user.passwordHash,
     );
 
     return result.lastID != null;
+  }
+
+  static async getByUsername(username: string, db: Database): Promise<User | null>
+  { return this.getUser(db, "SELECT * FROM users WHERE username = ?", username); }
+
+  static async getById(id: string, db: Database): Promise<User | null>
+  { return this.getUser(db, "SELECT * FROM users WHERE user_id = ?", id); }
+
+  private static async getUser(db: Database, query: string, ...params: any[]): Promise<User | null> {
+    const user = await db.get(query, ...params);
+    if (!user) {
+      return null;
+    }
+
+    return new User({
+      username: user.username,
+      email: user.email,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      streetAndNumber: user.street_and_number,
+      zipCode: user.zip_code,
+      city: user.city,
+      passwordHash: user.passwd_hash,
+    }, user.user_id);
+  }
 }

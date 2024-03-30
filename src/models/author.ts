@@ -1,34 +1,33 @@
-import { v4 as uuidv4 } from "uuid";
-import db from "../mixins/db";
+import type { Database } from "sqlite";
 
 export class Author {
-  public id: string;
+  public id: number;
   public first_name: string;
   public last_name: string;
   public wikipedia_url: string;
 
-  constructor(first_name: string, last_name: string, wikipedia_url: string, id?: string) {
-    this.id = id ?? uuidv4();
+  constructor(first_name: string, last_name: string, wikipedia_url: string, id?: number) {
+    this.id = id ?? 0;
     this.first_name = first_name;
     this.last_name = last_name;
     this.wikipedia_url = wikipedia_url;
   }
-}
 
-export async function getAuthorById(id: string): Promise<Author | null> {
-  const author = await db.get("SELECT * FROM authors WHERE author_id = ?", id);
-  if (!author) {
-    return null;
+  static async getById(id: string, db: Database): Promise<Author | null> {
+    const author = await db.get("SELECT * FROM authors WHERE author_id = ?", id);
+    if (!author) {
+      return null;
+    }
+
+    return new Author(author.first_name, author.last_name, author.wikipedia_url, author.author_id);
   }
 
-  return new Author(author.first_name, author.last_name, author.wikipedia_url, author.author_id);
-}
+  static async create(author: Author, db: Database): Promise<boolean> {
+    const result = await db.run(
+      "INSERT INTO authors VALUES (?, ?, ?, ?)",
+      author.id, author.first_name, author.last_name, author.wikipedia_url,
+    );
 
-export async function createAuthor(author: Author): Promise<Boolean> {
-  const result = await db.run(
-    "INSERT INTO authors VALUES (?, ?, ?, ?)",
-    author.id, author.first_name, author.last_name, author.wikipedia_url
-  );
-
-  return result.lastID != null;
+    return result.lastID != null;
+  }
 }

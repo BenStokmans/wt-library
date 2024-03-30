@@ -16,15 +16,39 @@
         <input id="username" name="username" type="text" autocomplete="username" required/>
       </p>
       <p>
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" required/>
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="text" autocomplete="email" required/>
       </p>
       <p>
-        <label for="password-repeat">Repeat password</label>
-        <input id="password-repeat" name="password_repeat" type="password" required/>
+        <label for="first-name">First name</label>
+        <input id="first-name" name="first_name" type="text" autocomplete="given-name" required/>
+      </p>
+      <p>
+        <label for="last-name">Last name</label>
+        <input id="last-name" name="last_name" type="text" autocomplete="family-name" required/>
+      </p>
+      <p>
+        <label for="street-and-number">Street and house number</label>
+        <input id="street-and-number" name="street_and_number" type="text" autocomplete="street-address" required/>
+      </p>
+      <p>
+        <label for="zip-code">Zip code</label>
+        <input id="zip-code" name="zip_code" type="text" autocomplete="postal-code" required/>
+      </p>
+      <p>
+        <label for="city">City</label>
+        <input id="city" name="city" type="text" autocomplete="address-level2" required/>
+      </p>
+      <p>
+        <label for="password">New password</label>
+        <input id="password" name="password" type="password" autocomplete="new-password" required/>
+      </p>
+      <p>
+        <label for="password-repeat">Confirm new password</label>
+        <input id="password-repeat" name="password_repeat" type="password" autocomplete="new-password" required/>
       </p>
       <% if (message) { %>
-        <p><%= message %></p>
+        <p style="color:darkred"><%= message %></p>
       <% } %>
       <p>
         <button type="submit">Sign up</button>

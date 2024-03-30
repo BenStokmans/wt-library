@@ -1,11 +1,17 @@
 CREATE TABLE users (
     user_id CHAR(36) PRIMARY KEY,
     username VARCHAR(32) NOT NULL UNIQUE,
-    passwd_hash VARCHAR(60) NOT NULL
+    email VARCHAR(320) NOT NULL UNIQUE,
+    first_name VARCHAR(128) NOT NULL,
+    last_name VARCHAR(128) NOT NULL,
+    street_and_number VARCHAR(128) NOT NULL,
+    zip_code CHAR(6) NOT NULL CHECK (zip_code REGEXP '^[1-9][0-9]{3}[A-Z]{2}$'),
+    city VARCHAR(128) NOT NULL,
+    passwd_hash CHAR(60) NOT NULL
 );
 
 CREATE TABLE authors (
-    author_id CHAR(36) PRIMARY KEY,
+    author_id INTEGER PRIMARY KEY AUTOINCREMENT,
     first_name VARCHAR(128) NOT NULL,
     last_name VARCHAR(128) NOT NULL,
     wikipedia_url VARCHAR(512)
@@ -13,7 +19,7 @@ CREATE TABLE authors (
 
 CREATE TABLE books (
     isbn INTEGER PRIMARY KEY,
-    author_id CHAR(36) NOT NULL,
+    author_id INTEGER NOT NULL,
     title VARCHAR(128) NOT NULL,
     cover_image_url VARCHAR(512),
     description VARCHAR(4096),
