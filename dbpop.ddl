@@ -6,7 +6,12 @@ INSERT INTO users VALUES
                       ('15fe00ef-9300-4af2-9352-48bbb442e6ef', 'cerberus', 'Mannen', 'v.d. Honden', '$2b$10$8ynx67ecpBD0LDdSc0e6T.IVOa6S9joiV1QNXN3xw1RN70SDjSwVm');
 
 INSERT INTO authors VALUES
-                        ();
+                        (NULL, Joanne, Rowling, 'https://en.wikipedia.org/wiki/J._K._Rowling'),
+                        (NULL, Frank, Herbert, 'https://en.wikipedia.org/wiki/Frank_Herbert')
+                        (NULL, Jeff, Kinney, 'https://en.wikipedia.org/wiki/Jeff_Kinney')
+                        (NULL, John, Tolkien, 'https://en.wikipedia.org/wiki/J._R._R._Tolkien')
+                        (NULL, Rick, Riordian, 'https://en.wikipedia.org/wiki/Rick_Riordan')
+                        (NULL, Stephanie, Meyer, 'https://en.wikipedia.org/wiki/Stephenie_Meyer');
 
 INSERT INTO books VALUES
                       ();
