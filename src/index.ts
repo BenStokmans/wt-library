@@ -30,6 +30,7 @@ app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(express.static("src/public"));
 
 // apply our strategy
 applyStrategy(passport, db);
