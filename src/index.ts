@@ -11,6 +11,7 @@ import sqlite3 from "sqlite3";
 import { Book } from "./models/book";
 import ejs from "ejs";
 import * as path from "path";
+import api from "./api";
 
 const db = await open({
   filename: "sqlite.db",
@@ -44,6 +45,9 @@ app.use(express.static("src/public", {
 applyStrategy(passport, db);
 
 const port = process.env.PORT || 8080;
+
+// api handler
+app.use("/api", api(db));
 
 app.get(
   "/",

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/definitions.css">
     <link rel="stylesheet" href="/css/index.css">
     <link rel="icon" type="image/png" href="/favicon.png" />
+    <script src="js/index.js" type="module"></script>
     <title>WTLibrary - Home</title>
 </head>
 <body>
@@ -26,15 +27,15 @@
             <% } %>
         </header>
         <section class="pages">
-            <div class="pagination">
-                <a id="previous" href="?page=<%= Math.max(page - 1, 0) %>">&laquo;</a>
+            <div id="pagination">
+                <a id="previous">&laquo;</a>
                 <% for (let i = 1; i <= pages; i++) { %>
-                    <a href="?page=<%= (i-1) %>"><%= i %></a>
+                    <a class="page-selector" href="?page=<%= (i-1) %>"><%= i %></a>
                 <% } %>
-                <a id="next" href="?page=<%= Math.min(page + 1, pages-1) %>">&raquo;</a>
+                <a id="next">&raquo;</a>
             </div>
         </section>
-        <section class="catalog">
+        <section id="catalog" class="catalog">
             <% for (var book of books) { %>
                 <article class="catalog__book-card">
                     <a href="/book/<%= encodeURIComponent(book.isbn) %>">
