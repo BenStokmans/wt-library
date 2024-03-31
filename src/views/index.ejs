@@ -29,8 +29,12 @@
         <section class="pages">
             <div id="pagination">
                 <a id="previous">&laquo;</a>
-                <% for (let i = 1; i <= pages; i++) { %>
-                    <a class="page-selector" href="?page=<%= (i-1) %>"><%= i %></a>
+                <% for (let i = 0; i < pages; i++) { %>
+                    <% if (i-1) { %>
+                        <a class="page-selector" href="?page=<%= i %>"><%= i+1 %></a>
+                    <% } else { %>
+                        <a class="page-selector" href="?page=<%= i %>"><%= i+1 %></a>
+                    <% } %>
                 <% } %>
                 <a id="next">&raquo;</a>
             </div>
