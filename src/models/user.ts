@@ -37,8 +37,8 @@ export class User {
 
   static async create(user: User, db: Database): Promise<boolean> {
     const result = await db.run(
-      "INSERT INTO users VALUES (?, ?, ?)",
-      user.id, user.username, user.passwordHash,
+      "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      user.id, user.username, user.email, user.firstName, user.lastName, user.streetAndNumber, user.zipCode, user.city, user.passwordHash
     );
 
     return result.lastID != null;

@@ -1,13 +1,14 @@
 import express, { type Request, type Response, type Express } from "express";
 import passport from "passport";
-import applyStrategy from "./passport.ts";
+import applyStrategy from "./passport";
 import session from "express-session";
+import log from "./logger";
 import cookieParser from "cookie-parser";
 import flash from "connect-flash";
 import registerAuth from "./auth";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
-import { Book } from "./models/book.ts";
+import { Book } from "./models/book";
 import ejs from "ejs";
 
 const db = await open({
@@ -40,26 +41,53 @@ const port = process.env.PORT || 8080;
 app.get(
   "/",
   async (req: Request, res: Response): Promise<void> => {
-    // @ts-ignore
-    let page: number = parseInt(req.query.page);
+    let page: number = parseInt(<string>req.query.page);
     if (isNaN(page)) page = 0;
 
+    let bookCount = 0;
+    try {
+        bookCount = await Book.getBookCount(db);
+    } catch (e) {
+        log.error(`error while getting book count: ${e}`);
+        res.send("an unknown error has occurred");
+        return;
+    }
+
+    let books: Book[];
+    try {
+        books = await Book.getPageWithAuthorNames(page, db)
+    } catch (e) {
+        log.error(`error while getting books page: ${e}`);
+        res.send("an unknown error has occurred");
+        return;
+    }
+
     res.send(await ejs.renderFile("src/views/index.ejs", {
-      books: await Book.getPageWithAuthorNames(page, db),
+      books: books,
       user: req.user,
       isAuthenticated: Boolean(req.user),
-      pages: Math.ceil(await Book.getBookCount(db) / 10)
+      pages: Math.ceil(bookCount / 10)
     }));
+    log.info(`GET / 200 OK`)
   },
 );
 
 app.get(
   "/book/:isbn",
   async (req: Request, res: Response): Promise<void> => {
-    let book = await Book.getByISBN(req.params.isbn, db);
+    let book: Book | null = null;
+    try {
+        book = await Book.getByISBN(req.params.isbn, db);
+    } catch (e) {
+        log.error(`error while getting book count: ${e}`);
+        res.send("an unknown error has occurred");
+        return;
+    }
+
     if (!book) {
-      // TODO: 404 here?
+      // TODO: 404 page here?
       res.redirect("/");
+      log.warn(`GET /books/${req.params.isbn} 404 Not found`);
       return;
     }
 
@@ -68,10 +96,12 @@ app.get(
       user: req.user,
       isAuthenticated: Boolean(req.user),
     }));
+
+    log.info(`GET /books/${book.isbn} 200 OK`)
   },
 );
 registerAuth(app, db);
 
 app.listen(port, () => {
-  console.log(`Server is up and running on port ${port}`);
+  log.info(`server is up and running on port ${port}`);
 });
