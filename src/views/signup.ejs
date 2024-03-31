@@ -23,25 +23,25 @@
         <h1>Signup</h1>
         <form action="/signup" method="post">
             <label for="username">Username</label>
-            <input id="username" name="username" type="text" autocomplete="username" required/>
+            <input id="username" name="username" type="text" autocomplete="username" value="<%= oldOpts.username %>" required/>
 
             <label for="email">Email address</label>
-            <input id="email" name="email" type="text" autocomplete="email" required/>
+            <input id="email" name="email" type="text" autocomplete="email" value="<%= oldOpts.email %>" required/>
 
             <label for="first-name">First name</label>
-            <input id="first-name" name="first_name" type="text" autocomplete="given-name" required/>
+            <input id="first-name" name="first_name" type="text" autocomplete="given-name" value="<%= oldOpts.firstName %>" required/>
 
             <label for="last-name">Last name</label>
-            <input id="last-name" name="last_name" type="text" autocomplete="family-name" required/>
+            <input id="last-name" name="last_name" type="text" autocomplete="family-name" value="<%= oldOpts.lastName %>" required/>
 
             <label for="street-and-number">Street and house number</label>
-            <input id="street-and-number" name="street_and_number" type="text" autocomplete="street-address" required/>
+            <input id="street-and-number" name="street_and_number" type="text" autocomplete="street-address" value="<%= oldOpts.streetAndNumber %>" required/>
 
             <label for="zip-code">Zip code</label>
-            <input id="zip-code" name="zip_code" type="text" autocomplete="postal-code" required/>
+            <input id="zip-code" name="zip_code" type="text" autocomplete="postal-code" value="<%= oldOpts.zipCode %>" required/>
 
             <label for="city">City</label>
-            <input id="city" name="city" type="text" autocomplete="address-level2" required/>
+            <input id="city" name="city" type="text" autocomplete="address-level2" value="<%= oldOpts.city %>" required/>
 
             <label for="password">New password</label>
             <input id="password" name="password" type="password" autocomplete="new-password" required/>
@@ -51,8 +51,7 @@
             <% if (message) { %>
               <p class="error"><%= message %></p>
             <% } %>
-            <input type="submit" value="Sign up"></input>
-          </p>
+            <input type="submit" value="Sign up"/>
         </form>
     </main>
 </body>

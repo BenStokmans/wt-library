@@ -26,11 +26,11 @@
         </header>
         <section class="pages">
             <div class="pagination">
-                <a id="previous" href="#">&laquo;</a>
+                <a id="previous" href="?page=<%= Math.max(page - 1, 0) %>">&laquo;</a>
                 <% for (let i = 1; i <= pages; i++) { %>
                     <a href="?page=<%= (i-1) %>"><%= i %></a>
                 <% } %>
-                <a id="next" href="#">&raquo;</a>
+                <a id="next" href="?page=<%= Math.min(page + 1, pages-1) %>">&raquo;</a>
             </div>
         </section>
         <section class="catalog">

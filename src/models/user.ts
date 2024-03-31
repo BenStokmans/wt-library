@@ -47,6 +47,9 @@ export class User {
   static async getByUsername(username: string, db: Database): Promise<User | null>
   { return this.getUser(db, "SELECT * FROM users WHERE username = ?", username); }
 
+  static async getByEmail(email: string, db: Database): Promise<User | null>
+  { return this.getUser(db, "SELECT * FROM users WHERE email = ?", email); }
+
   static async getById(id: string, db: Database): Promise<User | null>
   { return this.getUser(db, "SELECT * FROM users WHERE user_id = ?", id); }
 
@@ -66,5 +69,37 @@ export class User {
       city: user.city,
       passwordHash: user.passwd_hash,
     }, user.user_id);
+  }
+
+  private static zipCodeRegExp = new RegExp("^[1-9][0-9]{3}[a-zA-Z]{2}$");
+  // sourced from http://emailregex.com/
+  private static emailRegexp = new RegExp("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])");
+
+  static verifyOpts(opts: UserOpts): Error | null {
+    if (opts.username.length > 32) {
+      return new Error("maximum username length exceeded");
+    }
+    if (!this.emailRegexp.test(opts.email)) {
+      return new Error("invalid email address");
+    }
+    if (opts.email.length > 320) {
+      return new Error("maximum email length exceeded");
+    }
+    if (opts.firstName.length > 32) {
+      return new Error("maximum first name length exceeded");
+    }
+    if (opts.lastName.length > 32) {
+      return new Error("maximum last name length exceeded");
+    }
+    if (opts.streetAndNumber.length > 128) {
+      return new Error("maximum address line length exceeded");
+    }
+    if (!this.zipCodeRegExp.test(opts.zipCode)) {
+      return new Error("invalid zip code");
+    }
+    if (opts.streetAndNumber.length > 128) {
+      return new Error("maximum city name length exceeded");
+    }
+    return null;
   }
 }
