@@ -10,6 +10,7 @@ import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 import { Book } from "./models/book";
 import ejs from "ejs";
+import * as path from "path";
 
 const db = await open({
   filename: "sqlite.db",
@@ -31,7 +32,13 @@ app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-app.use(express.static("src/public"));
+app.use(express.static("src/public", {
+    index: false,
+    // HACK: hook setHeaders which is called when a static file is served
+    setHeaders: (response, file_path, file_stats) => {
+        log.info(`GET ${path.relative("src/public", file_path)} OK`);
+    },
+}));
 
 // apply our strategy
 applyStrategy(passport, db);
@@ -42,23 +49,32 @@ app.get(
   "/",
   async (req: Request, res: Response): Promise<void> => {
     let page: number = parseInt(<string>req.query.page);
-    if (isNaN(page)) page = 0;
+    if (isNaN(page) || page < 0) page = 0;
+
 
     let bookCount = 0;
     try {
         bookCount = await Book.getBookCount(db);
     } catch (e) {
         log.error(`error while getting book count: ${e}`);
+        res.status(500);
         res.send("an unknown error has occurred");
+
+        log.warn(`GET / 500 Internal Server Error`);
         return;
     }
+    let pages = Math.ceil(bookCount / 10);
+    if (page >= pages) page = pages-1;
 
     let books: Book[];
     try {
         books = await Book.getPageWithAuthorNames(page, db)
     } catch (e) {
         log.error(`error while getting books page: ${e}`);
+        res.status(500);
         res.send("an unknown error has occurred");
+
+        log.warn(`GET / 500 Internal Server Error`);
         return;
     }
 
@@ -66,9 +82,10 @@ app.get(
       books: books,
       user: req.user,
       isAuthenticated: Boolean(req.user),
-      pages: Math.ceil(bookCount / 10)
+      pages: pages,
+      page: page,
     }));
-    log.info(`GET / 200 OK`)
+    log.info(`GET / 200 OK`);
   },
 );
 
@@ -80,12 +97,16 @@ app.get(
         book = await Book.getByISBN(req.params.isbn, db);
     } catch (e) {
         log.error(`error while getting book count: ${e}`);
+        res.status(500);
         res.send("an unknown error has occurred");
+
+        log.warn(`GET / 500 Internal Server Error`);
         return;
     }
 
     if (!book) {
       // TODO: 404 page here?
+      res.status(404);
       res.redirect("/");
       log.warn(`GET /books/${req.params.isbn} 404 Not found`);
       return;
@@ -97,7 +118,7 @@ app.get(
       isAuthenticated: Boolean(req.user),
     }));
 
-    log.info(`GET /books/${book.isbn} 200 OK`)
+    log.info(`GET /books/${book.isbn} 200 OK`);
   },
 );
 registerAuth(app, db);
