@@ -5,7 +5,7 @@ CREATE TABLE users (
     first_name VARCHAR(128) NOT NULL,
     last_name VARCHAR(128) NOT NULL,
     street_and_number VARCHAR(128) NOT NULL,
-    zip_code CHAR(6) NOT NULL CHECK (zip_code REGEXP '^[1-9][0-9]{3}[A-Z]{2}$'),
+    zip_code CHAR(6) NOT NULL,
     city VARCHAR(128) NOT NULL,
     passwd_hash CHAR(60) NOT NULL
 );
