@@ -6,7 +6,8 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/global-form.css">
+    <link rel="stylesheet" href="/css/definitions.css">
   <link rel="stylesheet" href="/css/signup.css">
   <link rel="icon" type="image/png" href="/favicon.png" />
   <title>Sign up - WTLibrary</title>
@@ -16,40 +17,62 @@
         <header>
             <img src="/favicon.png"></img>
             <h1><a href="/">WTLibrary</a></h1>
-            <a class="auth-link" href="/login"><i class="bi bi-box-arrow-in-right"></i>Log in</a>
-            <a class="auth-link" href="/signup"><i class="bi bi-person-lines-fill"></i>Sign up</a>
         </header>
 
-        <h1>Signup</h1>
+        <h3>Create an account</h3>
         <form action="/signup" method="post">
-            <label for="username">Username</label>
-            <input id="username" name="username" type="text" autocomplete="username" required/>
+            <fieldset>
+                <div>
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" autocomplete="username" required/>
+                </div>
 
-            <label for="email">Email address</label>
-            <input id="email" name="email" type="text" autocomplete="email" required/>
+                <div>
+                    <label for="email">Email address</label>
+                    <input id="email" name="email" type="text" autocomplete="email" required/>
+                </div>
 
-            <label for="first-name">First name</label>
-            <input id="first-name" name="first_name" type="text" autocomplete="given-name" required/>
+                <div>
+                    <label for="first-name">First name</label>
+                    <input id="first-name" name="first_name" type="text" autocomplete="given-name" required/>
+                </div>
 
-            <label for="last-name">Last name</label>
-            <input id="last-name" name="last_name" type="text" autocomplete="family-name" required/>
+                <div>
+                    <label for="last-name">Last name</label>
+                    <input id="last-name" name="last_name" type="text" autocomplete="family-name" required/>
+                </div>
 
-            <label for="street-and-number">Street and house number</label>
-            <input id="street-and-number" name="street_and_number" type="text" autocomplete="street-address" required/>
+                <div>
+                    <label for="street-and-number">Street and house number</label>
+                    <input id="street-and-number" name="street_and_number" type="text" autocomplete="street-address" required/>
+                </div>
 
-            <label for="zip-code">Zip code</label>
-            <input id="zip-code" name="zip_code" type="text" autocomplete="postal-code" required/>
+                <div>
+                    <label for="zip-code">Zip code</label>
+                    <input id="zip-code" name="zip_code" type="text" autocomplete="postal-code" required/>
+                </div>
 
-            <label for="city">City</label>
-            <input id="city" name="city" type="text" autocomplete="address-level2" required/>
+                <div>
+                    <label for="city">City</label>
+                    <input id="city" name="city" type="text" autocomplete="address-level2" required/>
+                </div>
 
-            <label for="password">New password</label>
-            <input id="password" name="password" type="password" autocomplete="new-password" required/>
+                <div></div>
 
-            <label for="password-repeat">Confirm new password</label>
-            <input id="password-repeat" name="password_repeat" type="password" autocomplete="new-password" required/>
+                <div>
+                    <label for="password">New password</label>
+                    <input id="password" name="password" type="password" autocomplete="new-password" required/>
+                </div>
+
+                <div>
+                    <label for="password-repeat">Confirm new password</label>
+                    <input id="password-repeat" name="password_repeat" type="password" autocomplete="new-password" required/>
+                </div>
+            </fieldset>
+
+            <p>Already have an account? <a href="/login">Log in</a></p>
             <% if (message) { %>
-              <p class="error"><%= message %></p>
+              <p class="text--error"><%= message %></p>
             <% } %>
             <input type="submit" value="Sign up"></input>
           </p>

@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+.text--regular {
+    font-family: "Open Sans", sans-serif;
+    color: black;
+    font-size: 1rem;
+}
+
+.text--sub {
+    font-family: "Open Sans", sans-serif;
+    color: #424242;
+    font-size: 1rem;
+}
+
+.text--error {
+    color: #ff4c4c;
+    font-size: 0.9rem;
+}
+
+
