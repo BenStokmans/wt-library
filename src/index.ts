@@ -40,14 +40,36 @@ const port = process.env.PORT || 8080;
 app.get(
   "/",
   async (req: Request, res: Response): Promise<void> => {
+    // @ts-ignore
+    let page: number = parseInt(req.query.page);
+    if (isNaN(page)) page = 0;
+
     res.send(await ejs.renderFile("src/views/index.ejs", {
-      books: await Book.getPageWithAuthorNames(0, db),
+      books: await Book.getPageWithAuthorNames(page, db),
+      user: req.user,
+      isAuthenticated: Boolean(req.user),
+      pages: Math.ceil(await Book.getBookCount(db) / 10)
+    }));
+  },
+);
+
+app.get(
+  "/book/:isbn",
+  async (req: Request, res: Response): Promise<void> => {
+    let book = await Book.getByISBN(req.params.isbn, db);
+    if (!book) {
+      // TODO: 404 here?
+      res.redirect("/");
+      return;
+    }
+
+    res.send(await ejs.renderFile("src/views/book.ejs", {
+      book: book,
       user: req.user,
       isAuthenticated: Boolean(req.user),
     }));
   },
 );
-
 registerAuth(app, db);
 
 app.listen(port, () => {

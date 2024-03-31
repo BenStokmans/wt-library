@@ -1,31 +1,8 @@
-body {
-    font-family: "Open Sans", sans-serif;
-}
-
-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 2rem;
-    h1 {
-        margin-right: auto;
-    }
-    a.auth-link {
-        margin-left: 1rem;
-    }
-}
-
-section.main-content {
-    width: 1000px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
 section.catalog {
     display: grid;
     grid-template-columns: auto auto auto auto auto;
     column-gap: 2rem;
-    row-gap: 2rem;
+    row-gap: 1rem;
 
     article.catalog__book-card {
         display: flex;
@@ -36,8 +13,31 @@ section.catalog {
         }
         h4 {
             margin-bottom: 0;
+            color: black;
+        }
+        a {
+            text-decoration: none;
         }
     }
 }
 
+.pagination {
+  display: inline-block;
+}
 
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+section.pages {
+  text-align: center;
+  padding-bottom: 1rem;
+}

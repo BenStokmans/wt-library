@@ -42,4 +42,9 @@ export class Book {
 
     return result.lastID != null;
   }
+
+  static async getBookCount(db: Database): Promise<number> {
+    let result = await db.get("SELECT COUNT(isbn) AS count FROM books");
+    return result.count;
+  }
 }

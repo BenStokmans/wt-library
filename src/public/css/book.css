@@ -1,0 +1,21 @@
+img.book__content__image {
+    object-fit: contain;
+    border-radius: 10px;
+    float: left;
+    margin-right: 2rem;
+}
+
+p.book__content__description {
+    font-size: 20px;
+}
+
+.text--left { text-align: left }
+
+section {
+    justify-content: center;
+    height: 100vh;
+}
+
+.book-title {
+    display: block;
+}

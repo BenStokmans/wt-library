@@ -5,9 +5,33 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/book.css">
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <title><%= book.title %> - WTLibrary</title>
 </head>
 <body>
-
+    <main>
+        <header>
+            <img src="/favicon.png"></img>
+            <h1><a href="/">WTLibrary</a></h1>
+            <% if (isAuthenticated) { %>
+                <p>Logged in as <%= user.firstName[0] + ". " + user.lastName %></p>
+                <a class="auth-link" href="/logout">Log out</a>
+            <% } else { %>
+                <a class="auth-link" href="/login"><i class="bi bi-box-arrow-in-right"></i>Log in</a>
+                <a class="auth-link" href="/signup"><i class="bi bi-person-lines-fill"></i>Sign up</a>
+            <% } %>
+        </header>
+        <h1 class="book__title"><%= book.title %></h1>
+        <section class="book__content">
+            <img class="book__content__image" src="<%= book.coverImageUrl %>">
+            <h2 class="text--left">Description</h2>
+            <p class="text--left book__content_description"><%= book.description %></p>
+        </section>
+        <section>
+        </section>
+    </main>
 </body>
 </html>
