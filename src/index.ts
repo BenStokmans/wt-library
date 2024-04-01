@@ -12,6 +12,7 @@ import { Book } from "./models/book";
 import ejs from "ejs";
 import * as path from "path";
 import api from "./api";
+import { Reservation } from "./models/reservation";
 
 const db = await open({
   filename: "sqlite.db",
@@ -125,6 +126,37 @@ app.get(
     log.info(`GET /books/${book.isbn} 200 OK`);
   },
 );
+
+app.get(
+    "/profile",
+    async (req: Request, res: Response): Promise<void> => {
+       if (!req.user) {
+            // user is not logged in
+            res.redirect("/");
+            return;
+        }
+        let reservations: Reservation[];
+        try {
+            // @ts-ignore req.user is gewoon onze type maar niet volgens tsc, boeie
+            reservations = await Reservation.getReservationsByUser(req.user, db);
+        } catch (e) {
+            log.error(`error while getting reservation history: ${e}`);
+            res.status(500);
+            res.send("an unknown error has occurred");
+
+            log.warn(`GET /profile 500 Internal Server Error`);
+            return;
+        }
+
+        res.send(await ejs.renderFile("src/views/profile.ejs", {
+            user: req.user,
+            history: reservations,
+        }));
+
+        log.info(`GET /profile 200 OK`);
+    },
+);
+
 registerAuth(app, db);
 
 app.listen(port, () => {

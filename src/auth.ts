@@ -68,13 +68,13 @@ export default function (app: Express, db: Database): void {
       }
 
       let opts: UserOpts = {
-          username: req.body.username,
-          email: req.body.email,
-          firstName: req.body.first_name,
-          lastName: req.body.last_name,
-          streetAndNumber: req.body.street_and_number,
-          zipCode: req.body.zip_code,
-          city: req.body.city,
+          username: req.body.username.trim(),
+          email: req.body.email.trim(),
+          firstName: req.body.first_name.trim(),
+          lastName: req.body.last_name.trim(),
+          streetAndNumber: req.body.street_and_number.trim(),
+          zipCode: req.body.zip_code.trim(),
+          city: req.body.city.trim(),
           passwordHash: await bcrypt.hash(req.body.password, 10),
       };
       let validationError = User.verifyOpts(opts);

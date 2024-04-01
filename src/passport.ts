@@ -28,7 +28,7 @@ export default function(passport: any, db: Database) {
   passport.use("local", new LocalStrategy({}, async (username, password, done) => {
     let user: User | null;
     try {
-      user = await User.getByUsername(username, db);
+      user = await User.getByUsername(username.trim(), db);
     } catch (e) {
       log.error(`an error occurred while retrieving user from the database: ${e}`);
       log.warn(`POST /login 500 Internal Server Error`);

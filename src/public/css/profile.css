@@ -1,0 +1,27 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #DDD;
+}
+
+fieldset {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 2rem;
+    border: none;
+    padding: 0;
+}
+
+main {
+    width: 600px;
+}
+
+td.history__entry__state { font-weight: bold; }
+td.history__entry__state--due { color: orange; }
+td.history__entry__state--late { color: darkred; }
+td.history__entry__state--returned { color: forestgreen; }

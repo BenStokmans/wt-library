@@ -16,11 +16,11 @@
 <body>
     <main>
         <header>
-            <img src="/favicon.png"></img>
+            <img src="/favicon.png" alt="logo">
             <h1><a href="/">WTLibrary</a></h1>
             <% if (isAuthenticated) { %>
-                <p>Logged in as <%= user.firstName[0] + ". " + user.lastName %></p>
-                <a class="auth-link" href="/logout">Log out</a>
+                <a class="auth-link" href="/profile"><i class="bi bi-person-fill"></i><%= user.firstName[0] + ". " + user.lastName %></a>
+                <a class="auth-link" href="/logout"><i class="bi bi-box-arrow-in-left"></i>Log out</a>
             <% } else { %>
                 <a class="auth-link" href="/login"><i class="bi bi-box-arrow-in-right"></i>Log in</a>
                 <a class="auth-link" href="/signup"><i class="bi bi-person-lines-fill"></i>Sign up</a>
