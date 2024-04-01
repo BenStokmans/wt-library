@@ -1,8 +1,50 @@
-img.book__content__image {
-    object-fit: contain;
-    border-radius: 10px;
-    float: left;
-    margin-right: 2rem;
+.book {
+    display: flex;
+    .book__summary {
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+        margin-right: 3rem;
+        img.book__summary__image {
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .book__summary__availability {
+            margin-top: 0;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .availability--good {
+            color: #4CAF50;
+        }
+        .availability--limited {
+            color: #fc9745;
+        }
+        .availability--none {
+            color: #ff4c4c;
+        }
+    }
+
+    .book__content h3 {
+        margin-top: 2.5rem;
+    }
+    .book__content h3:first-child {
+        margin-top: 0;
+    }
+    .book__content p {
+        text-align: justify;
+        hyphens: auto;
+        hyphenate-limit-chars: 8;
+    }
+
+    .book__content__author-portrait {
+        width: 20%;
+        border-radius: 10px;
+        float: right;
+        margin: 0 0 2rem 2rem;
+    }
 }
 
 p.book__content__description {
@@ -10,11 +52,6 @@ p.book__content__description {
 }
 
 .text--left { text-align: left }
-
-section {
-    justify-content: center;
-    height: 100vh;
-}
 
 .book-title {
     display: block;

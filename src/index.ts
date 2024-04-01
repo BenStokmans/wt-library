@@ -34,11 +34,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use(express.static("src/public", {
-    index: false,
-    // HACK: hook setHeaders which is called when a static file is served
-    setHeaders: (response, file_path, file_stats) => {
-        log.info(`GET ${path.relative("src/public", file_path)} OK`);
-    },
+  index: false,
+  // HACK: hook setHeaders which is called when a static file is served
+  setHeaders: (response, file_path, file_stats) => {
+    log.info(`GET ${path.relative("src/public", file_path)} OK`);
+  },
 }));
 
 // apply our strategy
@@ -58,28 +58,28 @@ app.get(
 
     let bookCount = 0;
     try {
-        bookCount = await Book.getBookCount(db);
+      bookCount = await Book.getBookCount(db);
     } catch (e) {
-        log.error(`error while getting book count: ${e}`);
-        res.status(500);
-        res.send("an unknown error has occurred");
+      log.error(`error while getting book count: ${e}`);
+      res.status(500);
+      res.send("an unknown error has occurred");
 
-        log.warn(`GET / 500 Internal Server Error`);
-        return;
+      log.warn("GET / 500 Internal Server Error");
+      return;
     }
-    let pages = Math.ceil(bookCount / 10);
+    const pages = Math.ceil(bookCount / 10);
     if (page >= pages) page = pages-1;
 
     let books: Book[];
     try {
-        books = await Book.getPageWithAuthorNames(page, db)
+      books = await Book.getPageWithAuthorNames(page, db);
     } catch (e) {
-        log.error(`error while getting books page: ${e}`);
-        res.status(500);
-        res.send("an unknown error has occurred");
+      log.error(`error while getting books page: ${e}`);
+      res.status(500);
+      res.send("an unknown error has occurred");
 
-        log.warn(`GET / 500 Internal Server Error`);
-        return;
+      log.warn("GET / 500 Internal Server Error");
+      return;
     }
 
     res.send(await ejs.renderFile("src/views/index.ejs", {
@@ -89,7 +89,7 @@ app.get(
       pages: pages,
       page: page,
     }));
-    log.info(`GET / 200 OK`);
+    log.info("GET / 200 OK");
   },
 );
 
@@ -98,14 +98,14 @@ app.get(
   async (req: Request, res: Response): Promise<void> => {
     let book: Book | null = null;
     try {
-        book = await Book.getByISBN(req.params.isbn, db);
+      book = await Book.getByISBNWithAll(req.params.isbn, db);
     } catch (e) {
-        log.error(`error while getting book count: ${e}`);
-        res.status(500);
-        res.send("an unknown error has occurred");
+      log.error(`error while getting book count: ${e}`);
+      res.status(500);
+      res.send("an unknown error has occurred");
 
-        log.warn(`GET / 500 Internal Server Error`);
-        return;
+      log.warn("GET / 500 Internal Server Error");
+      return;
     }
 
     if (!book) {
@@ -122,7 +122,7 @@ app.get(
       isAuthenticated: Boolean(req.user),
     }));
 
-    log.info(`GET /books/${book.isbn} 200 OK`);
+    log.info(`GET /book/${book.isbn} 200 OK`);
   },
 );
 registerAuth(app, db);

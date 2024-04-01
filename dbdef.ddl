@@ -5,7 +5,7 @@ CREATE TABLE users (
     first_name VARCHAR(128) NOT NULL,
     last_name VARCHAR(128) NOT NULL,
     street_and_number VARCHAR(128) NOT NULL,
-    zip_code CHAR(6) NOT NULL,
+    zip_code CHAR(6) NOT NULL CHECK (zip_code LIKE '[1-9][0-9][0-9][0-9][A-Z][A-Z]'),
     city VARCHAR(128) NOT NULL,
     passwd_hash CHAR(60) NOT NULL
 );
@@ -15,6 +15,8 @@ CREATE TABLE authors (
     first_name VARCHAR(128) NOT NULL,
     last_name VARCHAR(128) NOT NULL,
     alias VARCHAR(128),
+    summary VARCHAR(4096),
+    portrait_url VARCHAR(512),
     wikipedia_url VARCHAR(512)
 );
 
@@ -22,6 +24,7 @@ CREATE TABLE books (
     isbn INTEGER PRIMARY KEY,
     author_id INTEGER NOT NULL,
     title VARCHAR(128) NOT NULL,
+    copies INTEGER NOT NULL CHECK (copies>=0),
     cover_image_url VARCHAR(512),
     description VARCHAR(4096),
     FOREIGN KEY (author_id) REFERENCES authors(author_id)
