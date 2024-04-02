@@ -53,6 +53,23 @@ export class Reservation {
     return new Reservation(user, book, start, end, reservation.returned, reservation.res_id);
   }
 
+  static async getReservationsByUser(user: User, db: Database): Promise<Reservation[]> {
+    const rawReservations = await db.all("SELECT res_id, start_time, duration, returned, isbn FROM reservations WHERE user_id = ?", user.id);
+
+    let reservations: Reservation[] = [];
+    for (let rawReservation of rawReservations) {
+      const book = await Book.getByISBN(rawReservation.isbn, db).then(v => v);
+      if (!book) continue;
+
+      let start = new Date(rawReservation.start_time / 1000000);
+      let end = new Date((rawReservation.start_time + rawReservation.duration) / 1000000);
+
+      reservations.push(new Reservation(user, book, start, end, rawReservation.returned, rawReservation.res_id));
+    }
+
+    return reservations;
+  }
+
   async insert(db: Database): Promise<boolean> {
     let startNanos = this.startTime.getMilliseconds() * 1000000;
     let durationNanos = (this.endTime.getMilliseconds() * 1000000) - startNanos;

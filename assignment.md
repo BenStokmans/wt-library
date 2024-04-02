@@ -1,0 +1,26 @@
+- [x] The starting page of your website should be the catalogue of books available in the library. Every book in a catalogue should be displayed as an image of its cover and should also show its title and the name(s) of the author(s).
+The catalogue of books should be retrieved from the database, not hardcoded into the HTML source of the page. Click on any book should open its description.
+- [x] Every book description should be generated in the same way as you have generated the info.html page implemented for HW2. The information describing the book should be retrieved from the database as well.
+You should support two categories of users - registered users (RU) and anonymous users (AU).
+Until logging in an AU should be able to browse through the catalogue but cannot reserve a book. The catalogue should display up to 10 books at once. In order to browse through the entire catalogue, pagination (https://en.wikipedia.org/wiki/Pagination) should be implemented (progressive loading is another option - loading more books once a user scrolls to the bottom of the page). Additional books should be retrieved from the server using AJAX.
+An AU should be able to register and login.
+- [ ] After logging in, a RU can buy reserve a book. This procedure should include at least two steps: selecting a book, confirming the reservation. Once the reservation is finished, the website should acknowledge it, and add the book to this RU's history. RUs should be able to browse through their history. When a RU makes a selection (chooses a book), this should be communicated to the server using AJAX, and the server should check if there are enough books to lend. The server should communicate back if there are enough books to lend. When the user confirms the reservation (ajax should be used) and the server should decrease the number of available books of this title. When browsing through their history a user should see which books they currently hold and should be able to release a book back. A server should update the number of available books of this title. A user should not be able to reserve more than one book of the same title.
+A user profile page needs to be implemented. This page should provide access to the user information (name, email, login, password, address, reservation history). When an AU registers, they have to fill-in this information (naturally, except for the reservation history).
+The list of available books, their descriptions, users and their information and history should be stored in a database.
+
+
+Technical requirements:
+- [ ] HTML and CSS  – follow the requirements specified in Assignment 1 to make sure your website represents its content according to the recent standards. Make sure W3C HTML5.0 and CSS3.0 validators do not generate errors and warnings.
+Accessibility and Responsive Design - your pages must continue following the accessibility standards and be designed at least for screens of two resolutions: small - for mobile phones and large - for tablets and bigger (you are welcome to further split the design between tablets and laptops/desktops).
+- [x] JavaScript – your website must use JavaScript. Use ES6 classes to represent books and users in your code.
+- [x] Node.JS (and its frameworks) – you need to implement the server side of your website with Node.JS. Usage of Express.JS is very much advised. You can use any additional Node.JS packages.
+- [x] Use sessions to maintain continuity of interaction with logged-in users. It should be possible for several users to be logged-in at the same time. You do not have to use persistent sessions (i.e. an unfinished reservations can "die" once a user logs-out), but you're welcome to do so.
+- [ ] AJAX – you will need AJAX/Fetch. At least two mandatory places for it are: displaying a large list of books for all users and processing a RU's reservation in progress. It is up to you to decide on using it in other places. You can use jQuery to implement AJAX on the client. You can also use Fetch if you like.
+- [x] It is up to you whether you use JSON or XML to exchange information between the client and the server (but use one of these formats).
+- [x] SQLite – books, users, reservastions, should be stored in an SQLite database and accessed with the Node.JS using sqlite3 module. When they are displayed, the information must come from the database. When new users are registered and when existing users authenticate or change their profile, the information should be exchanged with a database. When a user makes a reservation, the information should be added to the database.
+- [ ] Your website should work at least on the last versions of Chrome and Firefox.
+- [ ] Each HTML, CSS and JS file should have a comment at the top explaining the role and the functionality of the file and its structure. All JS methods and variables should have dedicated comments explaining their purpose.
+- [x] Use a logger recording all HTTP requests to your website.
+- [x] It is up to you whether or not to use HTML templating engines such as Jade.
+- [x] Make sure that your website is protected at least against SQL injections and Cross-site scripting.
+- [x] Populate your database with necessary data: add at least 50 books, create at least 5 registered users, and at least 10 existing reservations (overall, not per user).
