@@ -21,7 +21,7 @@ export class Reservation {
   }
 
   static async getReservationById(id: string, db: Database): Promise<Reservation | null> {
-    const reservation = await db.get("SELECT isbn, user_id, start_time, duration, returned FROM reservations WHERE res_id = ?", id);
+    const reservation = await db.get("WITH time(now) AS (SELECT (CAST(strftime('%s', 'now') AS INT) * 1000000000)) SELECT COUNT(res_id) != 0 FROM reservations, time WHERE user_id = ? AND isbn = ? AND start_time + duration > time.now", id);
     if (!reservation) {
       return null;
     }
