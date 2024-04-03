@@ -37,7 +37,7 @@ app.use(flash());
 app.use(express.static("src/public", {
   index: false,
   // HACK: hook setHeaders which is called when a static file is served
-  setHeaders: (response, file_path, file_stats) => {
+  setHeaders: (_response, file_path) => {
     log.info(`GET ${path.relative("src/public", file_path)} OK`);
   },
 }));
@@ -117,8 +117,20 @@ app.get(
       return;
     }
 
+    let hasCopy = false;
+    if (req.user) {
+      try {
+        // @ts-ignore weer tsc die niet begrijpt dat req.user ook gwn onze User class is
+        hasCopy = !(await book.canBorrow(req.user, db));
+      } catch (e) {
+        log.error(`error while checking if user already borrowed this book (defaulting to yes) ${e}`);
+        hasCopy = true;
+      }
+    }
+
     res.send(await ejs.renderFile("src/views/book.ejs", {
       book: book,
+      hasCopy: hasCopy,
       user: req.user,
       isAuthenticated: Boolean(req.user),
     }));

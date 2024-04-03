@@ -32,12 +32,16 @@
                     by <%= book.author.first_name + " " + book.author.last_name %>
                     <% if (book.author.alias) { %>(<%= book.author.alias %>)<% } %>
                 </p>
-                <% if (book.available > 1) { %>
-                    <p class="book__summary__availability availability--good">Available</p>
-                <% } else if (book.available === 1) { %>
-                    <p class="book__summary__availability availability--limited">Only one available</p>
+                <% if (hasCopy) { %>
+                    <p class="book__summary__availability availability--none">This user already has a copy of this book</p>
                 <% } else { %>
-                    <p class="book__summary__availability availability--none">Currently unavailable</p>
+                    <% if (book.available > 1) { %>
+                        <p class="book__summary__availability availability--good">Available</p>
+                    <% } else if (book.available === 1) { %>
+                        <p class="book__summary__availability availability--limited">Only one available</p>
+                    <% } else { %>
+                        <p class="book__summary__availability availability--none">Currently unavailable</p>
+                    <% } %>
                 <% } %>
             </aside>
             <article class="book__content">

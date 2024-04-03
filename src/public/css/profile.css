@@ -1,6 +1,8 @@
 table {
     border-collapse: collapse;
     width: 100%;
+    display: block;
+    margin-bottom: 2rem;
 }
 
 th, td {
@@ -19,6 +21,10 @@ fieldset {
 
 main {
     width: 600px;
+}
+
+section.history {
+    position: absolute;
 }
 
 td.history__entry__state { font-weight: bold; }

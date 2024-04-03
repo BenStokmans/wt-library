@@ -1,5 +1,6 @@
 import type { Database } from "sqlite";
 import { Author } from "./author.ts";
+import type { User } from "./user";
 
 export class Book {
   public isbn: number;
@@ -16,6 +17,11 @@ export class Book {
     this.coverImageUrl = coverImageUrl;
     this.description = description;
     this.available = available ?? null;
+  }
+
+  async canBorrow(user: User, db: Database): Promise<boolean> {
+    const result = await db.get("SELECT COUNT(res_id) as count FROM reservations WHERE user_id = ? AND isbn = ? AND start_time + duration > (CAST(strftime('%s', 'now') AS INT) * 1000000000)", user.id, this.isbn);
+    return result.count == 0;
   }
 
   static async getByISBN(isbn: string, db: Database): Promise<Book | null> {

@@ -62,32 +62,34 @@
     </form>
 
     <h3>Borrowing history</h3>
-    <% if (history.length === 0) { %>
-    <p>No history</p>
-    <% } else { %>
-    <table class="history">
-        <tr>
-            <th>Book title</th>
-            <th>Start date</th>
-            <th>End date</th>
-            <th>State</th>
-        </tr>
-        <% for (let reservation of history) { %>
+    <section class="history">
+        <% if (history.length === 0) { %>
+        <p>No history</p>
+        <% } else { %>
+        <table>
             <tr>
-                <td><%= reservation.book.title %></td>
-                <td><%= reservation.startTime.toLocaleString() %></td>
-                <td><%= reservation.endTime.toLocaleString() %></td>
-                <% if (reservation.returned) { %>
-                    <td class="history__entry__state history__entry__state--returned">Returned</td>
-                <% } else if (new Date() < reservation.endTime) { %>
-                    <td class="history__entry__state history__entry__state--due">Due</td>
-                    <!-- TODO: we kunnen hier misschien nog een knopje toevoegen om de reservation te verlengen -->
-                <% } else { %>
-                    <td class="history__entry__state history__entry__state--late">Late</td>
-                <% } %>
+                <th>Book title</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>State</th>
             </tr>
-        <% } %>
-    </table>
+            <% for (let reservation of history) { %>
+                <tr>
+                    <td><%= reservation.book.title %></td>
+                    <td><%= reservation.startTime.toLocaleString() %></td>
+                    <td><%= reservation.endTime.toLocaleString() %></td>
+                    <% if (reservation.returned) { %>
+                        <td class="history__entry__state history__entry__state--returned">Returned</td>
+                    <% } else if (new Date() < reservation.endTime) { %>
+                        <td class="history__entry__state history__entry__state--due">Due</td>
+                        <!-- TODO: we kunnen hier misschien nog een knopje toevoegen om de reservation te verlengen -->
+                    <% } else { %>
+                        <td class="history__entry__state history__entry__state--late">Late</td>
+                    <% } %>
+                </tr>
+            <% } %>
+        </table>
+    </section>
     <% } %>
 </main>
 </body>

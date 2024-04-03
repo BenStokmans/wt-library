@@ -34,8 +34,7 @@ section.catalog {
 }
 
 #pagination a.active {
-  background-color: #4CAF50;
-  color: white;
+  font-weight: bold;
 }
 
 section.pages {

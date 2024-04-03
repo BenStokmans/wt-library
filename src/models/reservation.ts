@@ -42,7 +42,7 @@ export class Reservation {
   }
 
   static async getReservationByUserAndBook(user: User, book: Book, db: Database): Promise<Reservation | null> {
-    const reservation = await db.get("SELECT res_id, start_time, duration, returned FROM reservations WHERE isbn = ? AND user_id = ?", book.isbn, user.id);
+    const reservation = await db.get("SELECT res_id, start_time, duration, returned FROM reservations WHERE isbn = ? AND user_id = ? ORDER BY start_time DESC", book.isbn, user.id);
     if (!reservation) {
       return null;
     }
@@ -54,7 +54,7 @@ export class Reservation {
   }
 
   static async getReservationsByUser(user: User, db: Database): Promise<Reservation[]> {
-    const rawReservations = await db.all("SELECT res_id, start_time, duration, returned, isbn FROM reservations WHERE user_id = ?", user.id);
+    const rawReservations = await db.all("SELECT res_id, start_time, duration, returned, isbn FROM reservations WHERE user_id = ? ORDER BY start_time DESC", user.id);
 
     let reservations: Reservation[] = [];
     for (let rawReservation of rawReservations) {
