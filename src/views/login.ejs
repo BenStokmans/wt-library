@@ -19,7 +19,7 @@
             <h1><a href="/">WTLibrary</a></h1>
         </header>
         <h3>Log in to your account</h3>
-        <form action="/login" method="post">
+        <form action="<%= redirect ? "/login?redirect=" + redirect : "/login" %>" method="post">
           <label for="username">Username</label>
           <input id="username" name="username" type="text" autocomplete="username" required/>
 

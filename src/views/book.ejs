@@ -33,8 +33,14 @@
                     <% if (book.author.alias) { %>(<%= book.author.alias %>)<% } %>
                 </p>
                 <% if (hasCopy) { %>
-                    <p class="book__summary__availability availability--none">This user already has a copy of this book</p>
+                    <button class="book__summary__reserve-btn" disabled>Ongoing reservation</button>
                 <% } else { %>
+
+                    <% if (isAuthenticated) { %>
+                        <button class="book__summary__reserve-btn">Reserve this book</button>
+                    <% } else { %>
+                        <button onclick="window.location.assign('/login?redirect=/book/<%= book.isbn %>')" class="book__summary__reserve-btn unauth">Log in to reserve</button>
+                    <% } %>
                     <% if (book.available > 1) { %>
                         <p class="book__summary__availability availability--good">Available</p>
                     <% } else if (book.available === 1) { %>
@@ -42,6 +48,7 @@
                     <% } else { %>
                         <p class="book__summary__availability availability--none">Currently unavailable</p>
                     <% } %>
+
                 <% } %>
             </aside>
             <article class="book__content">
@@ -61,5 +68,34 @@
             </article>
         </section>
     </main>
+    <% if (isAuthenticated) { %>
+        <script>
+            let displayedConfirmation = false;
+            let reserveBtn = document.getElementsByClassName("book__summary__reserve-btn")[0];
+            let textOrig = reserveBtn.innerText;
+            reserveBtn.addEventListener("click", () => {
+                if (!displayedConfirmation) {
+                    reserveBtn.innerText = "Click again to confirm";
+                    reserveBtn.classList.add("confirm");
+                    displayedConfirmation = true;
+                    return;
+                }
+                reserveBtn.innerText = textOrig;
+                reserveBtn.classList.remove("confirm");
+                displayedConfirmation = false;
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (this.readyState !== XMLHttpRequest.DONE) return;
+                    if (this.status !== 200) {
+                        if (this.response) alert(JSON.parse(this.response).error);
+                        return;
+                    }
+                    location.reload();
+                };
+                xhr.open("POST", "/api/reserve/<%= book.isbn %>");
+                xhr.send(null);
+            });
+        </script>
+    <% } %>
 </body>
 </html>

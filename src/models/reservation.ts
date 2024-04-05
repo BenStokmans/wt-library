@@ -11,10 +11,10 @@ export class Reservation {
   public endTime: Date;
   public returned: boolean;
 
-  constructor(user: User, book: Book, startTime: Date, endTime: Date, returned: boolean, id?: string) {
+  constructor(user: User, book: Book | number, startTime: Date, endTime: Date, returned: boolean, id?: string) {
     this.id = id ?? uuidv4();
     this.user = user;
-    this.book = book;
+    this.book = book instanceof Book ? book : new Book(book, 0, "", "", "");
     this.startTime = startTime;
     this.endTime = endTime;
     this.returned = returned;
@@ -35,8 +35,8 @@ export class Reservation {
       return null;
     }
 
-    let start = new Date(reservation.start_time / 1000000);
-    let end = new Date((reservation.start_time + reservation.duration) / 1000000);
+    const start = new Date(reservation.start_time / 1000000);
+    const end = new Date((reservation.start_time + reservation.duration) / 1000000);
 
     return new Reservation(user, book, start, end, reservation.returned, id);
   }
@@ -47,8 +47,8 @@ export class Reservation {
       return null;
     }
 
-    let start = new Date(reservation.start_time / 1000000);
-    let end = new Date((reservation.start_time + reservation.duration) / 1000000);
+    const start = new Date(reservation.start_time / 1000000);
+    const end = new Date((reservation.start_time + reservation.duration) / 1000000);
 
     return new Reservation(user, book, start, end, reservation.returned, reservation.res_id);
   }
@@ -56,13 +56,13 @@ export class Reservation {
   static async getReservationsByUser(user: User, db: Database): Promise<Reservation[]> {
     const rawReservations = await db.all("SELECT res_id, start_time, duration, returned, isbn FROM reservations WHERE user_id = ? ORDER BY start_time DESC", user.id);
 
-    let reservations: Reservation[] = [];
-    for (let rawReservation of rawReservations) {
+    const reservations: Reservation[] = [];
+    for (const rawReservation of rawReservations) {
       const book = await Book.getByISBN(rawReservation.isbn, db).then(v => v);
       if (!book) continue;
 
-      let start = new Date(rawReservation.start_time / 1000000);
-      let end = new Date((rawReservation.start_time + rawReservation.duration) / 1000000);
+      const start = new Date(rawReservation.start_time / 1000000);
+      const end = new Date((rawReservation.start_time + rawReservation.duration) / 1000000);
 
       reservations.push(new Reservation(user, book, start, end, rawReservation.returned, rawReservation.res_id));
     }
@@ -71,22 +71,22 @@ export class Reservation {
   }
 
   async insert(db: Database): Promise<boolean> {
-    let startNanos = this.startTime.getMilliseconds() * 1000000;
-    let durationNanos = (this.endTime.getMilliseconds() * 1000000) - startNanos;
+    const startNanos = this.startTime.getTime() * 1000000;
+    const durationNanos = (this.endTime.getTime() * 1000000) - startNanos;
     const result = await db.run(
       "INSERT INTO reservations VALUES (?, ?, ?, ?, ?, ?)",
-      this.id, this.book.isbn, this.user.id, startNanos, durationNanos, this.returned
+      this.id, this.book.isbn, this.user.id, startNanos, durationNanos, this.returned,
     );
     return result.lastID != null;
   }
 
   async update(db: Database): Promise<boolean> {
-    let durationNanos = (this.endTime.getMilliseconds() * 1000000) - (this.startTime.getMilliseconds() * 1000000);
+    const durationNanos = (this.endTime.getMilliseconds() * 1000000) - (this.startTime.getMilliseconds() * 1000000);
 
     // the only thing that should be updated is either the duration or returned
     const result = await db.run(
       "UPDATE reviews SET duration = ?, returned = ? WHERE res_id = ?",
-        durationNanos, this.returned
+      durationNanos, this.returned,
     );
 
     return result.lastID != null;

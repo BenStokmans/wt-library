@@ -15,14 +15,24 @@ export default function (app: Express, db: Database): void {
         log.info("GET /login 200 OK");
         return;
       }
-      res.send(await ejs.renderFile("src/views/login.ejs", { message: req.flash("error") }));
+      res.send(await ejs.renderFile("src/views/login.ejs", {
+        message: req.flash("error"),
+        redirect: req.query.redirect,
+      }));
       log.info("GET /login 200 OK");
     },
   );
 
   app.post(
     "/login",
-    passport.authenticate("local", { successRedirect: "/", failureRedirect: "/login", failureFlash: true }),
+    passport.authenticate("local", { failureRedirect: "/login", failureFlash: true }),
+    async (req: Request, res: Response): Promise<void> => {
+      if (req.query.redirect) {
+        res.redirect(req.query.redirect);
+        return;
+      }
+      res.redirect("/");
+    },
   );
 
   app.get(

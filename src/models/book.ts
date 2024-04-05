@@ -10,9 +10,9 @@ export class Book {
   public description: string;
   public available: number | null;
 
-  constructor(isbn: number, author: Author, title: string, coverImageUrl: string, description: string, available?: number) {
+  constructor(isbn: number, author: Author | number, title: string, coverImageUrl: string, description: string, available?: number) {
     this.isbn = isbn;
-    this.author = author;
+    this.author = author instanceof Author ? author : new Author("", "", null, null, null, null, author);
     this.title = title;
     this.coverImageUrl = coverImageUrl;
     this.description = description;

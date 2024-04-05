@@ -3,6 +3,8 @@ import {Book} from "./models/book.ts";
 import log from "./logger.ts";
 import type {Database} from "sqlite";
 import {Author} from "./models/author.ts";
+import {Reservation} from "./models/reservation.ts";
+import {User} from "./models/user.ts";
 
 export default function (db: Database): express.Router {
   const router = express.Router();
@@ -96,7 +98,30 @@ export default function (db: Database): express.Router {
     log.info(`GET ${req.url} 200 OK`);
   });
 
+  router.post("/reserve/:isbn", async (req: Request, res: Response): Promise<void> => {
+    if (!req.user) {
+      res.status(401).send(JSON.stringify({ error: "You are not logged in" }));
+      return;
+    }
+    if (await Reservation.getReservationByUserAndBook(<User>req.user, new Book(Number(req.params.isbn), 0, "", "", ""), db) !== null) {
+      res.status(403).send(JSON.stringify({ error: "You have already reserved a copy of this book" }));
+      return;
+    }
 
+    const numAvail = await Book.getAmountAvailable(req.params.isbn, db);
+    if (numAvail !== null && numAvail < 1) {
+      res.status(404).send(JSON.stringify({ error: "This book is currently unavailable, please check back later" }));
+      return;
+    }
+
+    // reserve for a week from now
+    const reservation = new Reservation(<User>req.user, Number(req.params.isbn), new Date(), new Date(new Date().getTime() + 604800000), false);
+    if (!await reservation.insert(db)) {
+      res.status(500).send(JSON.stringify({ error: "Internal server error while inserting reservation" }));
+      return;
+    }
+    res.sendStatus(200);
+  });
 
   return router;
 }
