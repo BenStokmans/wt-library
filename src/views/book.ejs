@@ -23,6 +23,16 @@
                 <a class="auth-link" href="/login"><i class="bi bi-box-arrow-in-right"></i>Log in</a>
                 <a class="auth-link" href="/signup"><i class="bi bi-person-lines-fill"></i>Sign up</a>
             <% } %>
+            <p><i id="hamburger-icon" class="bi bi-list"></i></p>
+            <ul id="hamburger-menu">
+                <% if (isAuthenticated) { %>
+                    <li><a class="auth-link" href="/profile"><i class="bi bi-person-fill"></i><%= user.firstName[0] + ". " + user.lastName %></a></li>
+                    <li><a class="auth-link" href="/logout"><i class="bi bi-box-arrow-in-left"></i>Log out</a></li>
+                <% } else { %>
+                    <li><a class="auth-link" href="/login"><i class="bi bi-box-arrow-in-right"></i>Log in</a></li>
+                    <li><a class="auth-link" href="/signup"><i class="bi bi-person-lines-fill"></i>Sign up</a></li>
+                <% } %>
+            </ul>
         </header>
         <section class="book">
             <aside class="book__summary">
@@ -39,7 +49,7 @@
                     <% if (isAuthenticated) { %>
                         <button class="book__summary__reserve-btn">Reserve this book</button>
                     <% } else { %>
-                        <button onclick="window.location.assign('/login?redirect=/book/<%= book.isbn %>')" class="book__summary__reserve-btn unauth">Log in to reserve</button>
+                        <button onclick="window.location.href = '/login?redirect=/book/<%= book.isbn %>'" class="book__summary__reserve-btn unauth">Log in to reserve</button>
                     <% } %>
                     <% if (book.available > 1) { %>
                         <p class="book__summary__availability availability--good">Available</p>
@@ -97,5 +107,6 @@
             });
         </script>
     <% } %>
+    <script src="/js/hamburger.js"></script>
 </body>
 </html>

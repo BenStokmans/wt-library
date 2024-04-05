@@ -1,23 +1,29 @@
 section.catalog {
     display: grid;
-    grid-template-columns: auto auto auto auto auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     column-gap: 2rem;
-    row-gap: 1rem;
+    row-gap: 2rem;
 
     article.catalog__book-card {
         display: flex;
         flex-direction: column;
+
         img {
             width: 100%;
-            margin-bottom: auto;
+            height: 280px;
         }
         h4 {
+            margin-top: 1rem;
             margin-bottom: 0;
             color: black;
         }
         a {
             text-decoration: none;
         }
+    }
+
+    article.catalog__book-card:hover {
+        cursor: pointer;
     }
 }
 
@@ -40,4 +46,47 @@ section.catalog {
 section.pages {
   text-align: center;
   padding-bottom: 1rem;
+}
+
+@media screen and (max-width: calc(1000px + 2rem)) {
+    section.catalog {
+        article.catalog__book-card {
+            img {
+                height: 27vw;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 910px) {
+    section.catalog {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        article.catalog__book-card {
+            img {
+                height: 32vw;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 740px) {
+    section.catalog {
+        grid-template-columns: 1fr 1fr 1fr;
+        article.catalog__book-card {
+            img {
+                height: 44vw;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 580px) {
+    section.catalog {
+        grid-template-columns: 1fr 1fr;
+        article.catalog__book-card {
+            img {
+                height: 70vw;
+            }
+        }
+    }
 }

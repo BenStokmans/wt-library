@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/css/definitions.css">
     <link rel="stylesheet" href="/css/index.css">
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <script src="js/index.js" type="module"></script>
+    <script src="/js/index.js" type="module"></script>
     <title>WTLibrary - Home</title>
 </head>
 <body>
@@ -25,6 +25,16 @@
                 <a class="auth-link" href="/login"><i class="bi bi-box-arrow-in-right"></i>Log in</a>
                 <a class="auth-link" href="/signup"><i class="bi bi-person-lines-fill"></i>Sign up</a>
             <% } %>
+            <p><i id="hamburger-icon" class="bi bi-list"></i></p>
+            <ul id="hamburger-menu">
+                <% if (isAuthenticated) { %>
+                    <li><a class="auth-link" href="/profile"><i class="bi bi-person-fill"></i><%= user.firstName[0] + ". " + user.lastName %></a></li>
+                    <li><a class="auth-link" href="/logout"><i class="bi bi-box-arrow-in-left"></i>Log out</a></li>
+                <% } else { %>
+                    <li><a class="auth-link" href="/login"><i class="bi bi-box-arrow-in-right"></i>Log in</a></li>
+                    <li><a class="auth-link" href="/signup"><i class="bi bi-person-lines-fill"></i>Sign up</a></li>
+                <% } %>
+            </ul>
         </header>
         <section class="pages">
             <div id="pagination">
@@ -41,15 +51,14 @@
         </section>
         <section id="catalog" class="catalog">
             <% for (var book of books) { %>
-                <article class="catalog__book-card">
-                    <a href="/book/<%= encodeURIComponent(book.isbn) %>">
-                        <img src="<%= book.coverImageUrl%>" alt="Cover image of <%= book.title %>">
-                        <h4><%= book.title %></h4>
-                    </a>
+                <article class="catalog__book-card" onclick="window.location.href = '/book/<%= book.isbn %>'">
+                    <img src="<%= book.coverImageUrl%>" alt="Cover image of <%= book.title %>">
+                    <h4><%= book.title %></h4>
                     <p>by <%= book.author.alias ? book.author.alias : book.author.first_name + " " + book.author.last_name %></p>
                 </article>
             <% } %>
         </section>
     </main>
+    <script src="/js/hamburger.js"></script>
 </body>
 </html>
