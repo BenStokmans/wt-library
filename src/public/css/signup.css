@@ -9,3 +9,29 @@ fieldset {
 main {
     width: 600px;
 }
+
+@media screen and (max-width: calc(600px + 4rem)) {
+    fieldset {
+        display: initial;
+    }
+}
+
+@media screen and (max-width: calc(600px + 4rem)) {
+    body {
+        margin: 0 2rem;
+    }
+    body main {
+        width: 100%;
+        position: initial;
+        transform: none;
+        padding: 0;
+
+        fieldset {
+            width: 100%;
+            div input {
+                width: 100%;
+            }
+        }
+
+    }
+}

@@ -64,7 +64,7 @@ main {
     transform: translateX(-50%);
 }
 
-@media screen and (max-width: calc(1000px + 2rem)) {
+@media screen and (max-width: calc(1000px + 4rem)) {
     main {
         width: 100%;
         position: static;
