@@ -11,7 +11,7 @@
     .book__summary {
         display: flex;
         flex-direction: column;
-        width: 30%;
+        width: 25%;
         margin-right: 3rem;
         margin-bottom: 1rem;
         float: left;
@@ -27,7 +27,7 @@
         }
 
         .availability--good {
-            color: #4CAF50;
+            color: #407e40;
         }
         .availability--limited {
             color: #b56726;
@@ -55,7 +55,7 @@
         }
 
         button.book__summary__reserve-btn:disabled{
-            background-color: #bababa;
+            background-color: #2b3c81;
             cursor: not-allowed;
         }
     }
@@ -90,13 +90,13 @@ p.book__content__description {
     display: block;
 }
 
-@media screen and (max-width: calc(1000px + 2rem)) {
+@media screen and (max-width: calc(1000px + 4rem)) {
     img.book__content__author-portrait {
         width: 140px !important;
     }
     .book {
         .book__summary {
-            width: 255px;
+            width: 250px;
         }
     }
 }
@@ -113,7 +113,7 @@ p.book__content__description {
     }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 620px) {
     .book .book__summary {
         float: none;
         margin: 0 auto;
@@ -122,6 +122,9 @@ p.book__content__description {
         button.book__summary__reserve-btn {
             width: 100%;
         }
+    }
+    .book .book__content h3:first-child {
+        margin-top: 2rem;
     }
 }
 
