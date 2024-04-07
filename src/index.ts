@@ -118,19 +118,19 @@ app.get(
       return;
     }
 
-    let hasCopy = false;
+    let hasReservation = false;
     if (req.user) {
       try {
-        hasCopy = !(await book.canBorrow(<User>req.user, db));
+        hasReservation = await book.hasCurrentReservation(<User>req.user, db);
       } catch (e) {
         log.error(`error while checking if user already borrowed this book (defaulting to yes) ${e}`);
-        hasCopy = true;
+        hasReservation = true;
       }
     }
 
     res.send(await ejs.renderFile("src/views/book.ejs", {
       book: book,
-      hasCopy: hasCopy,
+      hasReservation: hasReservation,
       user: req.user,
       isAuthenticated: Boolean(req.user),
     }));

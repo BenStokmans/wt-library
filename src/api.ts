@@ -101,25 +101,92 @@ export default function (db: Database): express.Router {
   router.post("/reserve/:isbn", async (req: Request, res: Response): Promise<void> => {
     if (!req.user) {
       res.status(401).send(JSON.stringify({ error: "You are not logged in" }));
+      log.info(`GET ${req.url} 401 Unauthorized`);
       return;
     }
-    if (await Reservation.getReservationByUserAndBook(<User>req.user, new Book(Number(req.params.isbn), 0, "", "", ""), db) !== null) {
-      res.status(403).send(JSON.stringify({ error: "You have already reserved a copy of this book" }));
+    var book = new Book(Number(req.params.isbn), 0, "", "", "");
+
+    try {
+      if (await book.hasCurrentReservation(<User>req.user, db)) {
+        res.status(403).send(JSON.stringify({ error: "You have already reserved a copy of this book" }));
+        log.info(`GET ${req.url} 403 Forbidden`);
+        return;
+      }
+    } catch (e) {
+      log.error(`error while getting reservation for isbn ${req.params.isbn}: ${e}`);
+      res.status(500);
+      log.info(`GET ${req.url} 500 Internal Server Error`);
       return;
     }
 
-    const numAvail = await Book.getAmountAvailable(req.params.isbn, db);
-    if (numAvail !== null && numAvail < 1) {
-      res.status(404).send(JSON.stringify({ error: "This book is currently unavailable, please check back later" }));
+    try {
+      const numAvail = await Book.getAmountAvailable(req.params.isbn, db);
+      if (numAvail !== null && numAvail < 1) {
+        res.status(404).send(JSON.stringify({ error: "This book is currently unavailable, please check back later" }));
+        log.info(`GET ${req.url} 404 Not Found`);
+        return;
+      }
+    } catch (e) {
+      log.error(`error while getting availability for isbn ${req.params.isbn}: ${e}`);
+      res.status(500);
+      log.info(`GET ${req.url} 500 Internal Server Error`);
       return;
     }
 
     // reserve for a week from now
-    const reservation = new Reservation(<User>req.user, Number(req.params.isbn), new Date(), new Date(new Date().getTime() + 604800000), false);
-    if (!await reservation.insert(db)) {
-      res.status(500).send(JSON.stringify({ error: "Internal server error while inserting reservation" }));
+    try {
+      const reservation = new Reservation(<User>req.user, Number(req.params.isbn), new Date(), new Date(new Date().getTime() + 604800000), false);
+      if (!await reservation.insert(db)) {
+        res.status(500).send(JSON.stringify({ error: "Internal server error while inserting reservation" }));
+        log.info(`GET ${req.url} 500 Internal Server Error`);
+        return;
+      }
+    } catch (e) {
+      log.error(`error while creating reservation for isbn: ${req.params.isbn}: ${e}`);
+      res.status(500);
+      log.info(`GET ${req.url} 500 Internal Server Error`);
       return;
     }
+
+    log.info(`GET ${req.url} 200 OK`);
+    res.sendStatus(200);
+  });
+
+  router.post("/return/:isbn", async (req: Request, res: Response): Promise<void> => {
+    if (!req.user) {
+      res.status(401).send(JSON.stringify({ error: "You are not logged in" }));
+      log.info(`GET ${req.url} 401 Unauthorized`);
+      return;
+    }
+    var book = new Book(Number(req.params.isbn), 0, "", "", "");
+
+    try {
+      if (!await book.hasCurrentReservation(<User>req.user, db)) {
+        res.status(403).send(JSON.stringify({ error: "You do not have a copy of this book" }));
+        log.info(`GET ${req.url} 403 Forbidden`);
+        return;
+      }
+    } catch (e) {
+      log.error(`error while checking for reservation: ${e}`);
+      res.status(500);
+      log.info(`GET ${req.url} 500 Internal Server Error`);
+      return;
+    }
+
+    try {
+      if (!await book.returnByUser(<User>req.user, db)) {
+        res.status(500).send(JSON.stringify({ error: "Internal server error while inserting reservation" }));
+        log.info(`GET ${req.url} 500 Internal Server Error`);
+        return;
+      }
+    } catch (e) {
+      log.error(`error while marking reservation as returned: ${e}`);
+      res.status(500);
+      log.info(`GET ${req.url} 500 Internal Server Error`);
+      return;
+    }
+
+    log.info(`GET ${req.url} 200 OK`);
     res.sendStatus(200);
   });
 

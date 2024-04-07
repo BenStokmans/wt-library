@@ -42,12 +42,11 @@
                     by <%= book.author.first_name + " " + book.author.last_name %>
                     <% if (book.author.alias) { %>(<%= book.author.alias %>)<% } %>
                 </p>
-                <% if (hasCopy) { %>
-                    <button class="book__summary__reserve-btn" disabled>Ongoing reservation</button>
+                <% if (hasReservation) { %>
+                    <button id="return" class="book__summary__return-btn">Return book</button>
                 <% } else { %>
-
                     <% if (isAuthenticated) { %>
-                        <button class="book__summary__reserve-btn">Reserve this book</button>
+                        <button id="reserve" class="book__summary__reserve-btn">Reserve this book</button>
                     <% } else { %>
                         <button onclick="window.location.href = '/login?redirect=/book/<%= book.isbn %>'" class="book__summary__reserve-btn unauth">Log in to reserve</button>
                     <% } %>
@@ -81,30 +80,45 @@
     <% if (isAuthenticated) { %>
         <script>
             let displayedConfirmation = false;
-            let reserveBtn = document.getElementsByClassName("book__summary__reserve-btn")[0];
-            let textOrig = reserveBtn.innerText;
-            reserveBtn.addEventListener("click", () => {
+            let returnButton = document.getElementById("return");
+            let reserveButton = document.getElementById("reserve");
+            let textOrig = "";
+
+            function reserveReturn(reserve) {
+                let btn = reserve ? reserveButton : returnButton;
                 if (!displayedConfirmation) {
-                    reserveBtn.innerText = "Click again to confirm";
-                    reserveBtn.classList.add("confirm");
+                    textOrig = btn.innerText;
+                    btn.innerText = "Click again to confirm";
+                    btn.classList.add("confirm");
                     displayedConfirmation = true;
                     return;
                 }
-                reserveBtn.innerText = textOrig;
-                reserveBtn.classList.remove("confirm");
+
+                btn.innerText = textOrig;
+                btn.classList.remove("confirm");
                 displayedConfirmation = false;
                 const xhr = new XMLHttpRequest();
+
                 xhr.onreadystatechange = function() {
                     if (this.readyState !== XMLHttpRequest.DONE) return;
                     if (this.status !== 200) {
                         if (this.response) alert(JSON.parse(this.response).error);
                         return;
                     }
+
                     location.reload();
                 };
-                xhr.open("POST", "/api/reserve/<%= book.isbn %>");
+
+                if (reserve) {
+                    xhr.open("POST", "/api/reserve/<%= book.isbn %>");
+                } else {
+                    xhr.open("POST", "/api/return/<%= book.isbn %>");
+                }
                 xhr.send(null);
-            });
+            }
+
+            if (returnButton) returnButton.addEventListener("click", () => reserveReturn(false));
+            if (reserveButton) reserveButton.addEventListener("click", () => reserveReturn(true));
         </script>
     <% } %>
     <script src="/js/hamburger.js"></script>

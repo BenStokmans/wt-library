@@ -34,7 +34,7 @@ section.catalog {
 #pagination a {
   color: black;
   float: left;
-  padding: 8px 16px;
+  padding: 8px 14px;
   text-decoration: none;
   cursor: pointer;
 }

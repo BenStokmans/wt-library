@@ -19,9 +19,15 @@ export class Book {
     this.available = available ?? null;
   }
 
-  async canBorrow(user: User, db: Database): Promise<boolean> {
-    const result = await db.get("SELECT COUNT(res_id) as count FROM reservations WHERE user_id = ? AND isbn = ? AND start_time + duration > (CAST(strftime('%s', 'now') AS INT) * 1000000000)", user.id, this.isbn);
-    return result.count == 0;
+  async returnByUser(user: User, db: Database): Promise<boolean> {
+    const result = await db.run("UPDATE reservations SET returned = TRUE WHERE isbn = ? AND user_id = ? AND returned = FALSE", this.isbn, user.id);
+
+    return result.lastID != null;
+  }
+
+  async hasCurrentReservation(user: User, db: Database): Promise<boolean> {
+    const result = await db.get("SELECT COUNT(res_id) as count FROM reservations WHERE isbn = ? AND user_id = ? AND returned = FALSE", this.isbn, user.id);
+    return result.count != 0;
   }
 
   static async getByISBN(isbn: string, db: Database): Promise<Book | null> {

@@ -36,7 +36,7 @@
             color: #bd3838;
         }
 
-        button.book__summary__reserve-btn {
+        button {
             background-color: #407e40;
             color: white;
             padding: 0.8rem 2rem;
@@ -46,18 +46,21 @@
             font-weight: 600;
         }
 
-        button.book__summary__reserve-btn.unauth{
+        button.book__summary__reserve-btn.unauth {
             background-color: #344340;
         }
 
-        button.book__summary__reserve-btn.confirm{
+        button.book__summary__reserve-btn.confirm {
             animation: shake 200ms;
         }
 
-        button.book__summary__reserve-btn:disabled{
+        button.book__summary__return-btn {
             background-color: #2b3c81;
-            cursor: not-allowed;
         }
+    }
+
+    .book_content {
+        padding-bottom: 4rem;
     }
 
     .book__content h3 {

@@ -75,7 +75,11 @@
             </tr>
             <% for (let reservation of history) { %>
                 <tr>
-                    <td><%= reservation.book.title %></td>
+                    <td>
+                        <a href="/book/<%= reservation.book.isbn %>">
+                            <%= reservation.book.title %>
+                        </a>
+                    </td>
                     <td><%= reservation.startTime.toLocaleString() %></td>
                     <td><%= reservation.endTime.toLocaleString() %></td>
                     <% if (reservation.returned) { %>
