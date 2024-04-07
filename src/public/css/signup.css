@@ -16,6 +16,14 @@ main {
     }
 }
 
+@media screen and (max-height: 750px) {
+    main {
+        position:relative;
+        margin:20rem 0 0 0 ;
+        height: 575px;      
+    }
+}
+
 @media screen and (max-width: calc(600px + 4rem)) {
     body {
         margin: 0 2rem;
