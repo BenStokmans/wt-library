@@ -111,7 +111,7 @@ app.get(
     if (!book) {
       // TODO: 404 page here?
       res.status(404);
-      res.redirect("/");
+      res.redirect(urlBase);
       log.warn(`GET ${req.url} 404 Not found`);
       return;
     }
@@ -143,7 +143,7 @@ app.get(
   async (req: Request, res: Response): Promise<void> => {
     if (!req.user) {
       // user is not logged in
-      res.redirect("/");
+      res.redirect(urlBase);
       return;
     }
     let reservations: Reservation[];

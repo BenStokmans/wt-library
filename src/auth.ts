@@ -6,12 +6,12 @@ import bcrypt from "bcrypt";
 import type { Database } from "sqlite";
 import log from "./logger";
 
-export default function (app: Express, urlBase: string,  db: Database): void {
+export default function (app: Express, urlBase: string, db: Database): void {
   app.get(
     "/login",
     async (req: Request, res: Response): Promise<void> => {
       if (req.user) {
-        res.redirect("/");
+        res.redirect(urlBase);
         log.info("GET /login 200 OK");
         return;
       }
@@ -26,13 +26,13 @@ export default function (app: Express, urlBase: string,  db: Database): void {
 
   app.post(
     "/login",
-    passport.authenticate("local", { failureRedirect: "/login", failureFlash: true }),
+    passport.authenticate("local", { failureRedirect: urlBase + "/login", failureFlash: true }),
     async (req: Request, res: Response): Promise<void> => {
       if (req.query.redirect) {
         res.redirect(<string>req.query.redirect);
         return;
       }
-      res.redirect("/");
+      res.redirect(urlBase);
     },
   );
 
@@ -40,7 +40,7 @@ export default function (app: Express, urlBase: string,  db: Database): void {
     "/signup",
     async (req: Request, res: Response): Promise<void> => {
       if (req.user) {
-        res.redirect("/");
+        res.redirect(urlBase);
         return;
       }
       // @ts-expect-error hier hebben opzich geen idee of oldOpts bestaat maar maakt niet uit dus tsc moet even stoppen met klagen
@@ -65,7 +65,7 @@ export default function (app: Express, urlBase: string,  db: Database): void {
     async (req: Request, res: Response): Promise<void> => {
       req.logout(() => {});
       log.info("GET /logout 200 OK");
-      res.redirect("/");
+      res.redirect(urlBase);
     },
   );
 
@@ -94,14 +94,14 @@ export default function (app: Express, urlBase: string,  db: Database): void {
         log.info("POST /signup 200 OK");
         // @ts-expect-error bestaat inderdaad niet maar boeie
         req.session.oldOpts = opts;
-        res.redirect("/signup");
+        res.redirect(urlBase + "/signup");
         return;
       }
 
       if (req.body.password !== req.body.password_repeat) {
         req.flash("error", "Passwords do not match");
         log.info("POST /signup 200 OK");
-        res.redirect("/signup");
+        res.redirect(urlBase + "/signup");
         return;
       }
 
@@ -109,13 +109,13 @@ export default function (app: Express, urlBase: string,  db: Database): void {
         if (await User.getByUsername(opts.username, db)) { // username already exists
           req.flash("error", "Username already exists");
           log.info("POST /signup 200 OK");
-          res.redirect("/signup");
+          res.redirect(urlBase + "/signup");
           return;
         }
         if (await User.getByEmail(opts.email, db)) { // email already exists
           req.flash("error", "Email address already in use");
           log.info("POST /signup 200 OK");
-          res.redirect("/signup");
+          res.redirect(urlBase + "/signup");
           return;
         }
       } catch (e) {
@@ -123,7 +123,7 @@ export default function (app: Express, urlBase: string,  db: Database): void {
         req.flash("error", "an unknown error occurred while signing up");
         res.status(500);
         log.info("POST /signup 500 Internal Server Error");
-        res.redirect("/signup");
+        res.redirect(urlBase + "/signup");
         return;
       }
 
@@ -139,17 +139,17 @@ export default function (app: Express, urlBase: string,  db: Database): void {
         req.flash("error", "an unknown error occurred while signing up");
         res.status(500);
         log.info("POST /signup 500 Internal Server Error");
-        res.redirect("/signup");
+        res.redirect(urlBase + "/signup");
         return;
       }
 
       log.info("POST /signup 200 OK");
       req.login(user, err => {
         if (err) {
-          res.redirect("/login");
+          res.redirect(urlBase + "/login");
           return;
         }
-        res.redirect("/");
+        res.redirect(urlBase);
       });
     },
   );
