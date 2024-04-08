@@ -23,6 +23,9 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+
+    // allow tslog to properly log source
+    "inlineSourceMap": true
   }
 }

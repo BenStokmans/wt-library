@@ -1,3 +1,5 @@
+PRAGMA foreign_keys = ON;
+
 CREATE TABLE users (
     user_id CHAR(36) PRIMARY KEY,
     username VARCHAR(32) NOT NULL UNIQUE,
@@ -28,16 +30,6 @@ CREATE TABLE books (
     cover_image_url VARCHAR(512),
     description VARCHAR(4096),
     FOREIGN KEY (author_id) REFERENCES authors(author_id)
-);
-
-CREATE TABLE reviews (
-    user_id CHAR(36) NOT NULL,
-    isbn INTEGER NOT NULL,
-    title VARCHAR(64) NOT NULL,
-    body VARCHAR(16384),
-    PRIMARY KEY (user_id, isbn),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (isbn) REFERENCES books(isbn)
 );
 
 CREATE TABLE reservations (

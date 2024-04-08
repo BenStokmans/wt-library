@@ -6,27 +6,27 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="/css/global-form.css">
-  <link rel="stylesheet" href="/css/definitions.css">
-  <link rel="stylesheet" href="/css/login.css">
-  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="stylesheet" href="<%= urlBase %>/css/global-form.css">
+  <link rel="stylesheet" href="<%= urlBase %>/css/definitions.css">
+  <link rel="stylesheet" href="<%= urlBase %>/css/login.css">
+  <link rel="icon" type="image/png" href="<%= urlBase %>/favicon.png" />
   <title>Login - WTLibrary</title>
 </head>
 <body>
     <main>
         <header>
-            <img src="/favicon.png">
-            <h1><a href="/">WTLibrary</a></h1>
+            <img src="<%= urlBase %>/favicon.png">
+            <h1><a href="<%= urlBase %>">WTLibrary</a></h1>
         </header>
         <h3>Log in to your account</h3>
-        <form action="<%= redirect ? "/login?redirect=" + redirect : "/login" %>" method="post">
+        <form action="<%= urlBase %><%= redirect ? "/login?redirect=" + redirect : "/login" %>" method="post">
           <label for="username">Username</label>
           <input id="username" name="username" type="text" autocomplete="username" required/>
 
           <label for="password">Password</label>
           <input id="password" name="password" type="password" autocomplete="password" required/>
 
-            <p>Don't have an account? <a href="/signup">Sign up</a></p>
+            <p>Don't have an account? <a href="<%= urlBase %>/signup">Sign up</a></p>
 
           <% if (message) { %>
             <p class="text--error" style="margin-top:0;"><%= message %></p>

@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import type { Database } from "sqlite";
 import log from "./logger";
 
-export default function (app: Express, db: Database): void {
+export default function (app: Express, urlBase: string,  db: Database): void {
   app.get(
     "/login",
     async (req: Request, res: Response): Promise<void> => {
@@ -18,6 +18,7 @@ export default function (app: Express, db: Database): void {
       res.send(await ejs.renderFile("src/views/login.ejs", {
         message: req.flash("error"),
         redirect: req.query.redirect,
+        urlBase: urlBase,
       }));
       log.info("GET /login 200 OK");
     },
@@ -28,7 +29,7 @@ export default function (app: Express, db: Database): void {
     passport.authenticate("local", { failureRedirect: "/login", failureFlash: true }),
     async (req: Request, res: Response): Promise<void> => {
       if (req.query.redirect) {
-        res.redirect(req.query.redirect);
+        res.redirect(<string>req.query.redirect);
         return;
       }
       res.redirect("/");
@@ -42,7 +43,7 @@ export default function (app: Express, db: Database): void {
         res.redirect("/");
         return;
       }
-      // @ts-ignore hier hebben opzich geen idee of oldOpts bestaat maar maakt niet uit dus tsc moet even stoppen met klagen
+      // @ts-expect-error hier hebben opzich geen idee of oldOpts bestaat maar maakt niet uit dus tsc moet even stoppen met klagen
       let oldOpts: UserOpts = req.session.oldOpts;
       if (!oldOpts) oldOpts = {
         city: "",
@@ -54,7 +55,7 @@ export default function (app: Express, db: Database): void {
         username: "",
         zipCode: "",
       };
-      res.send(await ejs.renderFile("src/views/signup.ejs", { oldOpts: oldOpts, message: req.flash("error") }));
+      res.send(await ejs.renderFile("src/views/signup.ejs", {oldOpts: oldOpts, message: req.flash("error"), urlBase: urlBase}));
       log.info("GET /signup 200 OK");
     },
   );
@@ -91,7 +92,7 @@ export default function (app: Express, db: Database): void {
       if (validationError !== null) {
         req.flash("error", validationError.message);
         log.info("POST /signup 200 OK");
-        // @ts-ignore bestaat inderdaad niet maar boeie
+        // @ts-expect-error bestaat inderdaad niet maar boeie
         req.session.oldOpts = opts;
         res.redirect("/signup");
         return;

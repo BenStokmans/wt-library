@@ -4,7 +4,9 @@ import { User } from "./models/user.ts";
 import log from "./logger.ts";
 import type {Database} from "sqlite";
 
-export default function(passport: any, db: Database) {
+export default function(passport: any, rawUrlBase: string, db: Database) {
+  const urlBase = rawUrlBase.replace(/http(s)?:\/\/[A-Za-z0-9\-._~/?#[\]@!$&'()*+,;=]+(:\d{1,5})*/g, "");
+
   // @ts-expect-error eslint is boos... boeie
   passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -19,8 +21,8 @@ export default function(passport: any, db: Database) {
 
       done(null, user);
     } catch (e) {
-      log.error(`an error occurred while deserializing user: ${e}`)
-      log.warn(`POST /login 500 Internal Server Error`);
+      log.error(`an error occurred while deserializing user: ${e}`);
+      log.warn(`POST ${urlBase}/login 500 Internal Server Error`);
       done(new Error("an unknown error occurred while deserialize the user"), null);
     }
   });
@@ -31,13 +33,13 @@ export default function(passport: any, db: Database) {
       user = await User.getByUsername(username.trim(), db);
     } catch (e) {
       log.error(`an error occurred while retrieving user from the database: ${e}`);
-      log.warn(`POST /login 500 Internal Server Error`);
+      log.warn(`POST ${urlBase}/login 500 Internal Server Error`);
       return done(null, false, {message : "an unknown error occurred trying to authenticate user"});
     }
 
     // user does not exist
     if (user == null) {
-      log.info(`POST /login 200 OK`);
+      log.info(`POST ${urlBase}/login 200 OK`);
       return done(null, false, { message: "User does not exist" });
     }
 
@@ -46,16 +48,16 @@ export default function(passport: any, db: Database) {
       match = await bcrypt.compare(password, user.passwordHash);
     } catch (e) {
       log.error(`error computing bcrypt hash for user: ${e}`);
-      log.warn(`POST /login 500 Internal Server Error`);
+      log.warn(`POST ${urlBase}/login 500 Internal Server Error`);
       return done(null, false, {message : "an unknown error occurred trying to authenticate user"});
     }
 
     if (!match) {
-      log.info(`POST /login 200 OK`);
+      log.info(`POST ${urlBase}/login 200 OK`);
       return done(null, false, { message: "Incorrect password" });
     }
 
-    log.info(`POST /login 200 OK`);
+    log.info(`POST ${urlBase}/login 200 OK`);
     return done(null, user);
   }));
 }

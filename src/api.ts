@@ -6,38 +6,42 @@ import {Author} from "./models/author.ts";
 import {Reservation} from "./models/reservation.ts";
 import {User} from "./models/user.ts";
 
+export async function getRequestedBooks(req: Request, res: Response, db: Database): Promise<[Book[], number, number] | null> {
+  let page: number = parseInt(<string>req.query.page);
+  if (isNaN(page) || page < 0) page = 0;
+
+  let bookCount = 0;
+  try {
+    bookCount = await Book.getBookCount(db);
+  } catch (e) {
+    log.error(`error while getting book count: ${e}`);
+    res.status(500);
+    res.send("an unknown error has occurred");
+
+    log.warn(`GET ${req.url} 500 Internal Server Error`);
+    return null;
+  }
+  const pages = Math.ceil(bookCount / 10);
+  if (page >= pages) page = pages-1;
+
+  try {
+    return [await Book.getPageWithAuthorNames(page, db), page, pages];
+  } catch (e) {
+    log.error(`error while getting books page: ${e}`);
+    res.status(500);
+    res.send("an unknown error has occurred");
+
+    log.warn(`GET ${req.url} 500 Internal Server Error`);
+    return null;
+  }
+}
+
 export default function (db: Database): express.Router {
   const router = express.Router();
   router.get("/books", async (req: Request, res: Response): Promise<void> => {
-    let page: number = parseInt(<string>req.query.page);
-    if (isNaN(page) || page < 0) page = 0;
-
-
-    let bookCount = 0;
-    try {
-      bookCount = await Book.getBookCount(db);
-    } catch (e) {
-      log.error(`error while getting book count: ${e}`);
-      res.status(500);
-      res.send("an unknown error has occurred");
-
-      log.warn("GET /api/books 500 Internal Server Error");
-      return;
-    }
-    const pages = Math.ceil(bookCount / 10);
-    if (page >= pages) page = pages-1;
-
-    let books: Book[];
-    try {
-      books = await Book.getPageWithAuthorNames(page, db);
-    } catch (e) {
-      log.error(`error while getting books page: ${e}`);
-      res.status(500);
-      res.send("an unknown error has occurred");
-
-      log.warn("GET /api/books 500 Internal Server Error");
-      return;
-    }
+    const result = await getRequestedBooks(req, res, db);
+    if (!result) return;
+    const [books, page, pages] = result;
 
     const simpleBooks = [];
     for (const book of books) {
@@ -45,7 +49,7 @@ export default function (db: Database): express.Router {
     }
 
     res.send(JSON.stringify({page: page, total_pages: pages, books: simpleBooks}));
-    log.info("GET /api/books 200 OK");
+    log.info(`GET ${req.url} 200 OK`);
   });
 
   router.get("/books/:isbn", async (req: Request, res: Response): Promise<void> => {

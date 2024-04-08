@@ -69,8 +69,7 @@ INSERT INTO books VALUES
                       (9780316505451, 6, 'Life and Death: Twilight Reimagined', 1, 'https://upload.wikimedia.org/wikipedia/en/6/65/TwilightReimaginedbook.jpg', 'Life and Death: Twilight Reimagined (2015) is a gender-swapped version of "Twilight," where Bella Swan becomes Beau Swan and Edward Cullen becomes Edythe Cullen. The novel explores a similar story with reversed gender roles and some differences in character dynamics.'),
                       (9780316707046, 6, 'Midnight Sun', 1, 'https://upload.wikimedia.org/wikipedia/en/e/eb/Midnight_Sun_-_Stephanie_Meyer_novel_cover_artwork.jpg', 'Midnight Sun (2020) is a companion novel to the "Twilight" series, narrated from Edward Cullen''s perspective. It revisits the events of "Twilight" but provides insights into Edward''s thoughts, feelings, and struggles as a vampire in love with a human.');
 
-INSERT INTO reviews VALUES
-                        ();
-
 INSERT INTO reservations VALUES
-                             ();
+                     ('8df66a6c-18dd-4993-a6e5-203d5d862bae',747538492,'395bff17-2b1d-42ad-972d-ab9c93646b85',1712499632489999872,604800000000000,1),
+                     ('4a50886e-b695-4a95-ab48-4f21f3d8c872',747538492,'395bff17-2b1d-42ad-972d-ab9c93646b85',1712499832612999936,604800000000000,1),
+                     ('87254003-04a5-4713-aed3-c7bffc821dc9',747538492,'395bff17-2b1d-42ad-972d-ab9c93646b85',1712568278793999872,604800000000000,1);

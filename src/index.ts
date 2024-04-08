@@ -11,25 +11,47 @@ import sqlite3 from "sqlite3";
 import { Book } from "./models/book";
 import ejs from "ejs";
 import * as path from "path";
-import api from "./api";
+import api, { getRequestedBooks } from "./api";
 import { Reservation } from "./models/reservation";
 import type {User} from "./models/user.ts";
+import { config } from "dotenv";
+
+// load environment variables
+config();
+
+const dbPath = String(process.env.DB_NAME);
+const dbExists = await Bun.file(dbPath).exists();
 
 const db = await open({
-  filename: "sqlite.db",
+  filename: dbPath,
   driver: sqlite3.Database,
 });
 
-// const db = new sqlite3.Database("sqlite.db");
+if (!dbExists) {
+  log.info("initializing database...");
+
+  const dbDef = await Bun.file("dbdef.ddl").text();
+  const dbPop = await Bun.file("dbpop.ddl").text();
+
+  try {
+    // create database definition
+    for (const sql of dbDef.split(";"))
+      await db.run(sql);
+    // populate the database
+    for (const sql of dbPop.split(";"))
+      await db.run(sql);
+  } catch { /* empty */ }
+}
 
 const app: Express = express();
 
 app.use(session({
-  secret: "demannenvancerberus",
+  secret: String(process.env.SESSION_SECRET),
   resave: false,
   saveUninitialized: true,
 }));
-app.use(cookieParser("demannenvancerberus"));
+app.use(cookieParser(String(process.env.COOKIE_SESSION_SECRET)));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(passport.initialize());
@@ -43,10 +65,11 @@ app.use(express.static("src/public", {
   },
 }));
 
-// apply our strategy
-applyStrategy(passport, db);
-
 const port = process.env.PORT || 8080;
+const urlBase = process.env.URL_BASE || "http://localhost";
+
+// apply our strategy
+applyStrategy(passport, urlBase, db);
 
 // api handler
 app.use("/api", api(db));
@@ -54,35 +77,9 @@ app.use("/api", api(db));
 app.get(
   "/",
   async (req: Request, res: Response): Promise<void> => {
-    let page: number = parseInt(<string>req.query.page);
-    if (isNaN(page) || page < 0) page = 0;
-
-
-    let bookCount = 0;
-    try {
-      bookCount = await Book.getBookCount(db);
-    } catch (e) {
-      log.error(`error while getting book count: ${e}`);
-      res.status(500);
-      res.send("an unknown error has occurred");
-
-      log.warn("GET / 500 Internal Server Error");
-      return;
-    }
-    const pages = Math.ceil(bookCount / 10);
-    if (page >= pages) page = pages-1;
-
-    let books: Book[];
-    try {
-      books = await Book.getPageWithAuthorNames(page, db);
-    } catch (e) {
-      log.error(`error while getting books page: ${e}`);
-      res.status(500);
-      res.send("an unknown error has occurred");
-
-      log.warn("GET / 500 Internal Server Error");
-      return;
-    }
+    const result = await getRequestedBooks(req, res, db);
+    if (!result) return;
+    const [books, page, pages] = result;
 
     res.send(await ejs.renderFile("src/views/index.ejs", {
       books: books,
@@ -90,8 +87,9 @@ app.get(
       isAuthenticated: Boolean(req.user),
       pages: pages,
       page: page,
+      urlBase: urlBase,
     }));
-    log.info("GET / 200 OK");
+    log.info(`GET ${req.url} 200 OK`);
   },
 );
 
@@ -106,7 +104,7 @@ app.get(
       res.status(500);
       res.send("an unknown error has occurred");
 
-      log.warn("GET / 500 Internal Server Error");
+      log.warn(`GET ${req.url} 500 Internal Server Error`);
       return;
     }
 
@@ -114,7 +112,7 @@ app.get(
       // TODO: 404 page here?
       res.status(404);
       res.redirect("/");
-      log.warn(`GET /books/${req.params.isbn} 404 Not found`);
+      log.warn(`GET ${req.url} 404 Not found`);
       return;
     }
 
@@ -133,9 +131,10 @@ app.get(
       hasReservation: hasReservation,
       user: req.user,
       isAuthenticated: Boolean(req.user),
+      urlBase: urlBase,
     }));
 
-    log.info(`GET /book/${book.isbn} 200 OK`);
+    log.info(`GET ${req.url} 200 OK`);
   },
 );
 
@@ -155,21 +154,22 @@ app.get(
       res.status(500);
       res.send("an unknown error has occurred");
 
-      log.warn("GET /profile 500 Internal Server Error");
+      log.warn(`GET ${req.url} 500 Internal Server Error`);
       return;
     }
 
     res.send(await ejs.renderFile("src/views/profile.ejs", {
       user: req.user,
       history: reservations,
+      urlBase: urlBase,
     }));
 
-    log.info("GET /profile 200 OK");
+    log.info(`GET ${req.url} 200 OK`);
   },
 );
 
-registerAuth(app, db);
+registerAuth(app, urlBase, db);
 
 app.listen(port, () => {
-  log.info(`server is up and running on port ${port}`);
+  log.info(`server is up and running on port with url base: ${process.env.URL_BASE}`);
 });
