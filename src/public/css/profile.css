@@ -61,3 +61,9 @@ td.history__entry__state { font-weight: bold; }
 td.history__entry__state--due { color: orange; }
 td.history__entry__state--late { color: darkred; }
 td.history__entry__state--returned { color: forestgreen; }
+
+body main {
+    top: 0;
+    transform: translateX(-50%);
+    padding-bottom: 2rem;
+}
