@@ -1,3 +1,27 @@
+<!--
+This EJS file generates the HTML content for the login page.
+It includes a form for users to input their username and password to log in, along with a link to sign up for a new account if they don't have one.
+
+Variables:
+- urlBase: The base URL of the application.
+- redirect: An optional parameter indicating the URL to redirect to after successful login.
+- message: An optional message to display to the user, such as an error message.
+
+Dependencies:
+- Bootstrap Icons: The icon library used for various icons in the UI.
+- global-form.css: The global stylesheet for styling form elements.
+- definitions.css: The stylesheet specific to definitions-related content.
+- login.css: The stylesheet specific to the login page.
+
+Form Elements:
+- username: Input field for the username.
+- password: Input field for the password.
+- submit: Button to submit the login form.
+
+Functionality:
+- On form submission, the data is sent to the "/login" endpoint with an optional redirect parameter if provided.
+- If there is an error message, it is displayed above the form.
+-->
 <!doctype html>
 <html lang="en">
 <head>

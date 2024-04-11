@@ -1,3 +1,34 @@
+<!--
+This EJS file generates the HTML content for the profile page.
+It displays the user's profile information and borrowing history.
+
+Variables:
+- urlBase: The base URL of the application.
+- user: An object containing the user's profile information, including username, email, first name, last name, street and house number, zip code, and city.
+- history: An array containing the user's borrowing history, each element representing a reservation with details such as book title, start date, end date, and reservation state.
+
+Dependencies:
+- Bootstrap Icons: The icon library used for various icons in the UI.
+- global-form.css: The global stylesheet for styling form elements.
+- definitions.css: The stylesheet specific to definitions-related content.
+- profile.css: The stylesheet specific to the profile page.
+
+Form Elements:
+- username: Input field displaying the user's username.
+- email: Input field displaying the user's email address.
+- first-name: Input field displaying the user's first name.
+- last-name: Input field displaying the user's last name.
+- street-and-number: Input field displaying the user's street and house number.
+- zip-code: Input field displaying the user's zip code.
+- city: Input field displaying the user's city.
+
+Functionality:
+- The form fields are disabled, indicating that they are for display purposes only and cannot be edited by the user.
+- The borrowing history is displayed in a table format, showing details such as book title, start date, end date, and reservation state.
+- If the borrowing history is empty, a message indicating "No history" is displayed.
+- Depending on the reservation state, the corresponding CSS class is applied to highlight the state (Returned, Due, Late).
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -86,7 +117,6 @@
                         <td class="history__entry__state history__entry__state--returned">Returned</td>
                     <% } else if (new Date() < reservation.endTime) { %>
                         <td class="history__entry__state history__entry__state--due">Due</td>
-                        <!-- TODO: we kunnen hier misschien nog een knopje toevoegen om de reservation te verlengen -->
                     <% } else { %>
                         <td class="history__entry__state history__entry__state--late">Late</td>
                     <% } %>

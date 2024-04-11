@@ -1,16 +1,35 @@
+/**
+ * Represents a reservation entity.
+ */
 import type { Database } from "sqlite";
 import { v4 as uuidv4 } from "uuid";
 import { Book } from "./book";
 import { User } from "./user";
 
 export class Reservation {
+  /** The unique identifier of the reservation. */
   public id: string;
+  /** The booked book. */
   public book: Book;
+  /** The user who made the reservation. */
   public user: User;
+  /** The start time of the reservation. */
   public startTime: Date;
+  /** The end time of the reservation. */
   public endTime: Date;
+  /** Indicates if the book has been returned. */
   public returned: boolean;
 
+
+  /**
+   * Constructs a new Reservation object.
+   * @param user The user who made the reservation.
+   * @param book The booked book.
+   * @param startTime The start time of the reservation.
+   * @param endTime The end time of the reservation.
+   * @param returned Indicates if the book has been returned.
+   * @param id Optional. The unique identifier of the reservation. Defaults to a generated UUID.
+   */
   constructor(user: User, book: Book | number, startTime: Date, endTime: Date, returned: boolean, id?: string) {
     this.id = id ?? uuidv4();
     this.user = user;
@@ -20,6 +39,12 @@ export class Reservation {
     this.returned = returned;
   }
 
+  /**
+   * Retrieves a reservation from the database by its unique identifier.
+   * @param id The unique identifier of the reservation.
+   * @param db The database connection.
+   * @returns A Promise that resolves to the retrieved Reservation object, or null if not found.
+   */
   static async getReservationById(id: string, db: Database): Promise<Reservation | null> {
     const reservation = await db.get("WITH time(now) AS (SELECT (CAST(strftime('%s', 'now') AS INT) * 1000000000)) SELECT COUNT(res_id) != 0 FROM reservations, time WHERE user_id = ? AND isbn = ? AND start_time + duration > time.now", id);
     if (!reservation) {
@@ -41,6 +66,13 @@ export class Reservation {
     return new Reservation(user, book, start, end, reservation.returned, id);
   }
 
+  /**
+   * Retrieves a reservation from the database by user and book.
+   * @param user The user who made the reservation.
+   * @param book The booked book.
+   * @param db The database connection.
+   * @returns A Promise that resolves to the retrieved Reservation object, or null if not found.
+   */
   static async getReservationByUserAndBook(user: User, book: Book, db: Database): Promise<Reservation | null> {
     const reservation = await db.get("SELECT res_id, start_time, duration, returned FROM reservations WHERE isbn = ? AND user_id = ? ORDER BY start_time DESC", book.isbn, user.id);
     if (!reservation) {
@@ -53,6 +85,12 @@ export class Reservation {
     return new Reservation(user, book, start, end, reservation.returned, reservation.res_id);
   }
 
+  /**
+   * Retrieves all reservations made by a user from the database.
+   * @param user The user who made the reservations.
+   * @param db The database connection.
+   * @returns A Promise that resolves to an array of Reservation objects representing the user's reservations.
+   */
   static async getReservationsByUser(user: User, db: Database): Promise<Reservation[]> {
     const rawReservations = await db.all("SELECT res_id, start_time, duration, returned, isbn FROM reservations WHERE user_id = ? ORDER BY start_time DESC", user.id);
 
@@ -70,6 +108,11 @@ export class Reservation {
     return reservations;
   }
 
+  /**
+   * Inserts a new reservation into the database.
+   * @param db The database connection.
+   * @returns A Promise that resolves to true if the reservation was successfully inserted, otherwise false.
+   */
   async insert(db: Database): Promise<boolean> {
     const startNanos = this.startTime.getTime() * 1000000;
     const durationNanos = (this.endTime.getTime() * 1000000) - startNanos;
@@ -80,6 +123,11 @@ export class Reservation {
     return result.lastID != null;
   }
 
+  /**
+   * Updates an existing reservation in the database.
+   * @param db The database connection.
+   * @returns A Promise that resolves to true if the reservation was successfully updated, otherwise false.
+   */
   async update(db: Database): Promise<boolean> {
     const durationNanos = (this.endTime.getMilliseconds() * 1000000) - (this.startTime.getMilliseconds() * 1000000);
 

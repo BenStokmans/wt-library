@@ -1,3 +1,14 @@
+/*
+    File: signup.css
+    Role: Defines styles specific to the signup page of the website, including fieldsets and main content.
+    Functionality: Provides CSS rules for fieldset layout and responsive design adjustments.
+    Structure:
+        - Styles for fieldsets, including grid layout and border.
+        - Styles for main content, including width.
+        - Media queries for responsive design adjustments based on screen width and height.
+*/
+
+/* Fieldset styles */
 fieldset {
     display: grid;
     grid-template-columns: auto auto;
@@ -6,40 +17,43 @@ fieldset {
     padding: 0;
 }
 
+/* Main content styles */
 main {
     width: 600px;
 }
 
+/* Responsive design adjustments */
 @media screen and (max-width: calc(600px + 4rem)) {
+    /* Display fieldsets as initial */
     fieldset {
         display: initial;
     }
-}
 
-@media screen and (max-height: 830px) {
-    body main {
-        top: 0;
-        transform: translateX(-50%);
-        padding-bottom: 2rem;
-    }
-}
-
-@media screen and (max-width: calc(600px + 4rem)) {
+    /* Adjust body margin */
     body {
         margin: 0 2rem;
     }
-    body main {
+
+    /* Adjust main width and position */
+    main {
         width: 100%;
         position: initial;
         transform: none;
         padding: 0;
+    }
 
-        fieldset {
-            width: 100%;
-            div input {
-                width: 100%;
-            }
-        }
+    /* Adjust input width within fieldset */
+    fieldset div input {
+        width: 100%;
+    }
+}
 
+/* Responsive design adjustments based on screen height */
+@media screen and (max-height: 830px) {
+    /* Adjust main content position and padding */
+    body main {
+        top: 0;
+        transform: translateX(-50%);
+        padding-bottom: 2rem;
     }
 }

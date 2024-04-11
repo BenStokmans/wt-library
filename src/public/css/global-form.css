@@ -1,13 +1,30 @@
+/*
+    File: global-form.css
+    Role: Defines global styles for forms across the website, including body, headers, and form elements.
+    Functionality: Provides CSS rules for form layout, typography, and responsiveness.
+    Structure:
+        - Defines body styles, including font family and padding.
+        - Styles for icons.
+        - Styles for main content section, including width and positioning.
+        - Styles for header section, including logo and authentication links.
+        - Styles for form labels and input fields.
+        - Styles for form submission button.
+        - Media queries for responsive design adjustments.
+*/
+
+/* Body styles */
 body {
     font-family: "Open Sans", sans-serif;
     padding-bottom: 2rem;
 }
 
+/* Icon styles */
 i {
     padding-left: 10px;
     padding-right: 10px;
 }
 
+/* Main content styles */
 main {
     width: 400px;
     position: absolute;
@@ -16,35 +33,42 @@ main {
     transform: translate(-50%, -55%);
 }
 
+/* Header styles */
 header {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 2rem;
-    img {
-        /* h1 = 2em; so h1 + 1em */
-        height: 3em;
-    }
-    h1 {
-        margin: 2rem 0;
-        a {
-            text-decoration: none;
-            color: black;
-        }
-    }
-
-    a.auth-link {
-        margin-left: 1rem;
-        color: black;
-        text-decoration: none;
-    }
 }
 
+/* Logo styles */
+header img {
+    height: 3em; /* h1 = 2em; so h1 + 1em */
+}
+
+/* Title styles */
+header h1 {
+    margin: 2rem 0;
+}
+
+/* Anchor styles */
+header a {
+    text-decoration: none;
+    color: black;
+}
+
+/* Authentication link styles */
+a.auth-link {
+    margin-left: 1rem;
+}
+
+/* Form label styles */
 label {
     margin-top: 0.6rem;
     display: block;
 }
 
+/* Form input styles */
 input[type=text], input[type=password] {
     width: 100%;
     padding: 14px 20px;
@@ -55,6 +79,7 @@ input[type=text], input[type=password] {
     box-sizing: border-box;
 }
 
+/* Form submission button styles */
 input[type=submit] {
     background-color: #344340;
     color: white;
@@ -69,6 +94,7 @@ input[type=submit]:hover {
     background-color: #293633;
 }
 
+/* Responsive design adjustments */
 @media screen and (max-width: calc(400px + 4rem)) {
     main {
         left: 0;

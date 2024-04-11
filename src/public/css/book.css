@@ -1,3 +1,19 @@
+/*
+    File: book.css
+    Role: Defines the styles for a book summary and content display.
+    Functionality: Provides CSS rules for styling book summary and content sections.
+    Structure:
+        - Defines keyframes for shake animation.
+        - Styles for book summary section:
+            - Sets layout properties like display, width, and margins.
+            - Defines styles for book image, availability status, and buttons.
+            - Includes media queries for responsive design.
+        - Styles for book content section:
+            - Sets padding and margins for content elements.
+            - Defines typography and layout properties.
+        - Media queries for adjusting styles based on screen width.
+*/
+
 @keyframes shake {
     0% { transform: translateX(0) }
     25% { transform: translateX(3px) }
@@ -7,7 +23,7 @@
 }
 
 .book {
-    /*display: flex;*/
+    /* Styles for book summary section */
     .book__summary {
         display: flex;
         flex-direction: column;
@@ -15,92 +31,102 @@
         margin-right: 3rem;
         margin-bottom: 1rem;
         float: left;
-        img.book__summary__image {
-            object-fit: contain;
-            border-radius: 10px;
-        }
-
-        .book__summary__availability {
-            font-size: 0.9rem;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .availability--good {
-            color: #407e40;
-        }
-        .availability--limited {
-            color: #b56726;
-        }
-        .availability--none {
-            color: #bd3838;
-        }
-
-        button {
-            background-color: #407e40;
-            color: white;
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        button.book__summary__reserve-btn.unauth {
-            background-color: #344340;
-        }
-
-        button.book__summary__reserve-btn.confirm {
-            animation: shake 200ms;
-        }
-
-        button.book__summary__return-btn {
-            background-color: #2b3c81;
-        }
     }
 
-    .book_content {
-        padding-bottom: 4rem;
-    }
-
-    .book__content h3 {
-        margin-top: 2.5rem;
-    }
-    .book__content h3:first-child {
-        margin-top: 0;
-    }
-    .book__content p {
-        text-align: justify;
-        hyphens: auto;
-        hyphenate-limit-chars: 8;
-    }
-
-    .book__content__author-portrait {
-        width: 20%;
+    /* Styles for book image */
+    img.book__summary__image {
+        object-fit: contain;
         border-radius: 10px;
-        float: right;
-        margin: 0 0 2rem 2rem;
+    }
+
+    /* Styles for book availability status */
+    .book__summary__availability {
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    /* Styles for different availability statuses */
+    .availability--good {
+        color: #407e40;
+    }
+    .availability--limited {
+        color: #b56726;
+    }
+    .availability--none {
+        color: #bd3838;
+    }
+
+    /* Styles for buttons */
+    button {
+        background-color: #407e40;
+        color: white;
+        padding: 0.8rem 2rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    /* Additional button styles */
+    button.book__summary__reserve-btn.unauth {
+        background-color: #344340;
+    }
+
+    button.book__summary__reserve-btn.confirm {
+        animation: shake 200ms;
+    }
+
+    button.book__summary__return-btn {
+        background-color: #2b3c81;
     }
 }
 
+/* Styles for book content section */
+.book_content {
+    padding-bottom: 4rem;
+}
+
+.book__content h3 {
+    margin-top: 2.5rem;
+}
+.book__content h3:first-child {
+    margin-top: 0;
+}
+.book__content p {
+    text-align: justify;
+    hyphens: auto;
+    hyphenate-limit-chars: 8;
+}
+
+/* Styles for author portrait */
+.book__content__author-portrait {
+    width: 20%;
+    border-radius: 10px;
+    float: right;
+    margin: 0 0 2rem 2rem;
+}
+
+/* Additional styles */
 p.book__content__description {
     font-size: 20px;
 }
 
-.text--left { text-align: left }
+.text--left {
+    text-align: left;
+}
 
 .book-title {
     display: block;
 }
 
+/* Media queries for responsiveness */
 @media screen and (max-width: calc(1000px + 4rem)) {
     img.book__content__author-portrait {
         width: 140px !important;
     }
-    .book {
-        .book__summary {
-            width: 250px;
-        }
+    .book .book__summary {
+        width: 250px;
     }
 }
 
@@ -121,10 +147,9 @@ p.book__content__description {
         float: none;
         margin: 0 auto;
         width: 70%;
-
-        button.book__summary__reserve-btn {
-            width: 100%;
-        }
+    }
+    button.book__summary__reserve-btn {
+        width: 100%;
     }
     .book .book__content h3:first-child {
         margin-top: 2rem;
@@ -136,13 +161,3 @@ p.book__content__description {
         width: 120px !important;
     }
 }
-
-/*@media screen and (max-width: 720px) {*/
-/*    .book {*/
-/*        flex-direction: column;*/
-/*        align-items: center;*/
-/*        .book__summary {*/
-/*            width: 50%;*/
-/*        }*/
-/*    }*/
-/*}*/

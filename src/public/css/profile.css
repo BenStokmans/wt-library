@@ -1,3 +1,16 @@
+/*
+    File: profile.css
+    Role: Defines styles specific to the user profile page of the website, including tables and fieldsets.
+    Functionality: Provides CSS rules for table layout, fieldset styles, and responsive design adjustments.
+    Structure:
+        - Styles for tables, including border collapse and overflow.
+        - Styles for table headers and cells, including padding, alignment, and border.
+        - Styles for links within table cells.
+        - Styles for fieldsets, including grid layout and border.
+        - Media queries for responsive design adjustments based on screen width.
+*/
+
+/* Table styles */
 table {
     border-collapse: collapse;
     width: 100%;
@@ -6,15 +19,19 @@ table {
     overflow-x:auto;
 }
 
+/* Table cell styles */
 th, td {
     padding: 8px;
     text-align: left;
     border-bottom: 1px solid #DDD;
-    a {
-        color: #000;
-    }
 }
 
+/* Link styles within table cells */
+th a, td a {
+    color: #000;
+}
+
+/* Fieldset styles */
 fieldset {
     display: grid;
     grid-template-columns: auto auto;
@@ -23,45 +40,57 @@ fieldset {
     padding: 0;
 }
 
+/* Responsive design adjustments */
 @media screen and (max-width: calc(600px + 4rem)) {
+    /* Display fieldsets as initial */
     fieldset {
         display: initial;
     }
-}
 
-@media screen and (max-width: calc(600px + 4rem)) {
+    /* Adjust body margin */
     body {
         margin: 0 2rem;
     }
-    body main {
+
+    /* Adjust main width and position */
+    main {
         width: 100%;
         position: initial;
         transform: none;
         padding: 0;
+    }
 
-        fieldset {
-            width: 100%;
-            div input {
-                width: 100%;
-            }
-        }
-
+    /* Adjust input width within fieldset */
+    fieldset div input {
+        width: 100%;
     }
 }
 
+/* Main content styles */
 main {
     width: 600px;
 }
 
+/* History section styles */
 section.history {
     position: absolute;
 }
 
-td.history__entry__state { font-weight: bold; }
-td.history__entry__state--due { color: orange; }
-td.history__entry__state--late { color: darkred; }
-td.history__entry__state--returned { color: forestgreen; }
+/* History entry state styles */
+td.history__entry__state {
+    font-weight: bold;
+}
+td.history__entry__state--due {
+    color: orange;
+}
+td.history__entry__state--late {
+    color: darkred;
+}
+td.history__entry__state--returned {
+    color: forestgreen;
+}
 
+/* Additional main content styles */
 body main {
     top: 0;
     transform: translateX(-50%);

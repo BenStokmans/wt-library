@@ -3,10 +3,19 @@ import ejs from "ejs";
 import passport from "passport";
 import {User, type UserOpts} from "./models/user";
 import bcrypt from "bcrypt";
-import type { Database } from "sqlite";
+import type {Database} from "sqlite";
 import log from "./logger";
 
+/**
+ * Configures routes for user authentication (login, logout, signup) on the provided Express app.
+ * @param app The Express application.
+ * @param urlBase The base URL path.
+ * @param db The database connection.
+ */
 export default function (app: Express, urlBase: string, db: Database): void {
+  // Configures routes for user authentication.
+
+  // Route to render login page
   app.get(
     "/login",
     async (req: Request, res: Response): Promise<void> => {
@@ -24,6 +33,7 @@ export default function (app: Express, urlBase: string, db: Database): void {
     },
   );
 
+  // Route to handle login form submission
   app.post(
     "/login",
     passport.authenticate("local", { failureRedirect: urlBase + "/login", failureFlash: true }),
@@ -36,6 +46,7 @@ export default function (app: Express, urlBase: string, db: Database): void {
     },
   );
 
+  // Route to render signup page
   app.get(
     "/signup",
     async (req: Request, res: Response): Promise<void> => {
@@ -60,6 +71,7 @@ export default function (app: Express, urlBase: string, db: Database): void {
     },
   );
 
+  // Route to handle user logout
   app.get(
     "/logout",
     async (req: Request, res: Response): Promise<void> => {
@@ -69,6 +81,7 @@ export default function (app: Express, urlBase: string, db: Database): void {
     },
   );
 
+  // Route to handle user signup form submission
   app.post(
     "/signup",
     async (req: Request, res: Response): Promise<void> => {

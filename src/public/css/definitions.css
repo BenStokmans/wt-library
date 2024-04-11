@@ -1,20 +1,33 @@
+/*
+    File: definitions.css
+    Role: Defines typography styles using the Open Sans font family.
+    Functionality: Provides CSS rules for regular, sub, and error text styles.
+    Structure:
+        - Imports the Open Sans font from Google Fonts.
+        - Defines styles for regular text.
+        - Defines styles for subtext.
+        - Defines styles for error messages.
+*/
+
+/* Importing Open Sans font */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
+/* Regular text style */
 .text--regular {
     font-family: "Open Sans", sans-serif;
     color: black;
     font-size: 1rem;
 }
 
+/* Subtext style */
 .text--sub {
     font-family: "Open Sans", sans-serif;
     color: #424242;
     font-size: 0.9rem;
 }
 
+/* Error message style */
 .text--error {
     color: #ff4c4c;
     font-size: 0.9rem;
 }
-
-

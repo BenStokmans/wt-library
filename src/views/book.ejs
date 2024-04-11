@@ -1,3 +1,21 @@
+<!--
+This EJS file generates the HTML content for displaying book details, including book summary, content, author information, and reservation/return options.
+
+Variables:
+- urlBase: The base URL of the application.
+- book: The book object containing details such as title, author, cover image, description, availability, and author information.
+- isAuthenticated: A boolean indicating whether the user is authenticated.
+- user: The authenticated user object.
+- hasReservation: A boolean indicating whether the authenticated user has a reservation for the book.
+
+Functions:
+- reserveReturn(reserve): A JavaScript function that handles the reservation or return of the book. It toggles a confirmation message on button click and sends a POST request to the appropriate API endpoint.
+
+Dependencies:
+- Bootstrap Icons: The icon library used for various icons in the UI.
+- global.css: The global stylesheet for styling common elements.
+- book.css: The stylesheet specific to book-related content.
+-->
 <!doctype html>
 <html lang="en">
 <head>

@@ -1,3 +1,10 @@
+/**
+ * Provides functionality to retrieve requested books and create an Express router with routes for book-related actions.
+ * @remarks
+ * This module exports a function to retrieve books based on pagination and another function to create an Express router
+ * with routes for actions related to books, such as getting book details, checking availability, reserving, and returning books.
+ * @packageDocumentation
+ */
 import express, {type Request, type Response} from "express";
 import {Book} from "./models/book.ts";
 import log from "./logger.ts";
@@ -6,6 +13,13 @@ import {Author} from "./models/author.ts";
 import {Reservation} from "./models/reservation.ts";
 import {User} from "./models/user.ts";
 
+/**
+ * Retrieves the requested books based on the page number.
+ * @param req The request object.
+ * @param res The response object.
+ * @param db The database connection.
+ * @returns A Promise that resolves to an array containing an array of Book objects, the current page number, and the total number of pages, or null if an error occurs.
+ */
 export async function getRequestedBooks(req: Request, res: Response, db: Database): Promise<[Book[], number, number] | null> {
   let page: number = parseInt(<string>req.query.page);
   if (isNaN(page) || page < 0) page = 0;
@@ -36,8 +50,16 @@ export async function getRequestedBooks(req: Request, res: Response, db: Databas
   }
 }
 
+/**
+ * Creates an Express router with routes for book-related actions.
+ * @param db The database connection.
+ * @returns An Express router configured with routes for book-related actions.
+ */
 export default function (db: Database): express.Router {
+  // Creates an Express router with routes for book-related actions.
   const router = express.Router();
+
+  // Route to get paginated list of books
   router.get("/books", async (req: Request, res: Response): Promise<void> => {
     const result = await getRequestedBooks(req, res, db);
     if (!result) return;
@@ -52,6 +74,7 @@ export default function (db: Database): express.Router {
     log.info(`GET ${req.url} 200 OK`);
   });
 
+  // Route to get details of a specific book by ISBN
   router.get("/books/:isbn", async (req: Request, res: Response): Promise<void> => {
     let book: Book | null;
 
@@ -80,6 +103,7 @@ export default function (db: Database): express.Router {
     log.info(`GET ${req.url} 200 OK`);
   });
 
+  // Route to get availability of a book by ISBN
   router.get("/availability/:isbn", async (req: Request, res: Response): Promise<void> => {
     let avail: number | null;
 
@@ -102,13 +126,14 @@ export default function (db: Database): express.Router {
     log.info(`GET ${req.url} 200 OK`);
   });
 
+  // Route to reserve a book by ISBN
   router.post("/reserve/:isbn", async (req: Request, res: Response): Promise<void> => {
     if (!req.user) {
       res.status(401).send(JSON.stringify({ error: "You are not logged in" }));
       log.info(`GET ${req.url} 401 Unauthorized`);
       return;
     }
-    var book = new Book(Number(req.params.isbn), 0, "", "", "");
+    const book = new Book(Number(req.params.isbn), 0, "", "", "");
 
     try {
       if (await book.hasCurrentReservation(<User>req.user, db)) {
@@ -156,13 +181,14 @@ export default function (db: Database): express.Router {
     res.sendStatus(200);
   });
 
+  // Route to return a book by ISBN
   router.post("/return/:isbn", async (req: Request, res: Response): Promise<void> => {
     if (!req.user) {
       res.status(401).send(JSON.stringify({ error: "You are not logged in" }));
       log.info(`GET ${req.url} 401 Unauthorized`);
       return;
     }
-    var book = new Book(Number(req.params.isbn), 0, "", "", "");
+    const book = new Book(Number(req.params.isbn), 0, "", "", "");
 
     try {
       if (!await book.hasCurrentReservation(<User>req.user, db)) {
