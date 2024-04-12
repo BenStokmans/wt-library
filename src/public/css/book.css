@@ -102,7 +102,6 @@
 /* Styles for author portrait */
 .book__content__author-portrait {
     width: 20%;
-    border-radius: 10px;
     float: right;
     margin: 0 0 2rem 2rem;
 }

@@ -38,4 +38,4 @@ You can adjust environment variables by modifying the `.env` file in the project
 
 ## License
 
-This project is licensed under the \[GLWT(Good Luck With That) License\](https://github.com/me-shaon/GLWTPL/).
+This project is licensed under the [GLWT(Good Luck With That) License](https://github.com/me-shaon/GLWTPL/).

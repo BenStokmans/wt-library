@@ -36,27 +36,27 @@ const dbExists = await Bun.file(dbPath).exists();
 
 // Open the SQLite database connection
 const db = await open({
-    filename: dbPath,
-    driver: sqlite3.Database,
+  filename: dbPath,
+  driver: sqlite3.Database,
 });
 
 // Initialize the database if it doesn't exist
 if (!dbExists) {
-    log.info("initializing database...");
+  log.info("initializing database...");
 
-    // Read the database definition file
-    const dbDef = await Bun.file("dbdef.ddl").text();
-    // Read the database population file
-    const dbPop = await Bun.file("dbpop.ddl").text();
+  // Read the database definition file
+  const dbDef = await Bun.file("dbdef.ddl").text();
+  // Read the database population file
+  const dbPop = await Bun.file("dbpop.ddl").text();
 
-    try {
-        // Create database tables and schema
-        for (const sql of dbDef.split(";"))
-            await db.run(sql);
-        // Populate the database with initial data
-        for (const sql of dbPop.split(";"))
-            await db.run(sql);
-    } catch { /* ignore errors */ }
+  try {
+    // Create database tables and schema
+    for (const sql of dbDef.split(";"))
+      await db.run(sql);
+    // Populate the database with initial data
+    for (const sql of dbPop.split(";"))
+      await db.run(sql);
+  } catch { /* ignore errors */ }
 }
 
 // Initialize the Express application
@@ -64,9 +64,9 @@ const app: Express = express();
 
 // Middleware for session management
 app.use(session({
-    secret: String(process.env.SESSION_SECRET),
-    resave: false,
-    saveUninitialized: true,
+  secret: String(process.env.SESSION_SECRET),
+  resave: false,
+  saveUninitialized: true,
 }));
 app.use(cookieParser(String(process.env.COOKIE_SESSION_SECRET)));
 
@@ -83,11 +83,11 @@ app.use(flash());
 
 // Serve static files from the public directory
 app.use(express.static("src/public", {
-    index: false,
-    setHeaders: (_response, file_path) => {
-        // Log static file requests
-        log.info(`GET ${path.relative("src/public", file_path)} OK`);
-    },
+  index: false,
+  setHeaders: (_response, file_path) => {
+    // Log static file requests
+    log.info(`GET ${path.relative("src/public", file_path)} OK`);
+  },
 }));
 
 // Port configuration

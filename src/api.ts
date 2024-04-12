@@ -9,7 +9,6 @@ import express, {type Request, type Response} from "express";
 import {Book} from "./models/book.ts";
 import log from "./logger.ts";
 import type {Database} from "sqlite";
-import {Author} from "./models/author.ts";
 import {Reservation} from "./models/reservation.ts";
 import {User} from "./models/user.ts";
 
