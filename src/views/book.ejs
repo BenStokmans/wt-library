@@ -54,7 +54,7 @@ Dependencies:
         </header>
         <section class="book">
             <aside class="book__summary">
-                <img class="book__summary__image" src="<%= book.coverImageUrl %>">
+                <img class="book__summary__image" src="<%= book.coverImageUrl %>" alt="Cover image of <%= book.title %>">
                 <h4><%= book.title %></h4>
                 <p class="text--sub" style="margin-top:0;">
                     by <%= book.author.first_name + " " + book.author.last_name %>
