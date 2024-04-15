@@ -5,6 +5,9 @@
 
 import { Author, Book } from "./common.js";
 
+/** base path stored to ensure compatibility with webtech uu site **/
+let basePath = "/"
+
 /** The current page number */
 let page = 0;
 
@@ -37,7 +40,7 @@ async function previous() {
  */
 async function loadPage() {
   // Fetch data from the API
-  const response = await fetch("/api/books?page=" + page);
+  const response = await fetch(basePath + "api/books?page=" + page);
   const resp = await response.json();
 
   // Calculate the maximum number of pages
@@ -98,7 +101,7 @@ async function loadPage() {
   for (let book of books) {
     let card = document.createElement("article");
     card.className = "catalog__book-card";
-    card.onclick = () => { window.location.href = "/book/" + book.isbn; };
+    card.onclick = () => { window.location.href = basePath + "book/" + book.isbn; };
 
     let img = document.createElement("img");
     img.src = book.cover_img;
@@ -129,6 +132,8 @@ async function loadPage() {
  * @async
  */
 window.onload = async function () {
+  basePath = window.location.pathname;
+
   page = 0;
   const pageParam = new URLSearchParams(window.location.search).get("page");
   if (pageParam) page = parseInt(pageParam);
