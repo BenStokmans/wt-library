@@ -27,6 +27,7 @@ main {
     /* Display fieldsets as initial */
     fieldset {
         display: initial;
+        width: 100%;
     }
 
     /* Adjust body margin */
@@ -48,8 +49,8 @@ main {
     }
 }
 
-/* Responsive design adjustments based on screen height */
-@media screen and (max-height: 830px) {
+ /*Responsive design adjustments based on screen height */
+@media screen and (max-height: 830px) and (min-width: calc(600px + 4rem)) {
     /* Adjust main content position and padding */
     body main {
         top: 0;
