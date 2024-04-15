@@ -45,6 +45,7 @@ fieldset {
     /* Display fieldsets as initial */
     fieldset {
         display: initial;
+        width: 100% !important;
     }
 
     /* Adjust body margin */
@@ -54,15 +55,10 @@ fieldset {
 
     /* Adjust main width and position */
     main {
-        width: 100%;
-        position: initial;
-        transform: none;
+        width: 100% !important;
+        position: initial !important;
+        transform: none !important;
         padding: 0;
-    }
-
-    /* Adjust input width within fieldset */
-    fieldset div input {
-        width: 100%;
     }
 }
 
